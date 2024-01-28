@@ -31,8 +31,7 @@ class _MainPageViewState extends State<MainPageView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<NavigationBarBloc, NavigationBarState>(
-      listener: (context, state) {},
+    return BlocBuilder<NavigationBarBloc, NavigationBarState>(
       builder: (context, state) {
         return PlatformTabScaffold(
           tabController: _tabController,
