@@ -16,7 +16,7 @@ void main() {
             create: (context) => NavigationBarBloc(),
           ),
           BlocProvider(
-            create: (context) => SubjectBloc(),
+            create: (context) => SubjectBloc()
           ),
         ],
         child: const MainPageView(),
