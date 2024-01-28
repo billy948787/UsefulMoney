@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'dart:developer' as devtool show log;
-import 'package:usefulmoney/services/routing/bloc/navigation_bar_route_bloc.dart';
-import 'package:usefulmoney/services/routing/bloc/navigation_bar_route_event.dart';
-import 'package:usefulmoney/services/routing/bloc/navigation_bar_route_state.dart';
+import 'package:usefulmoney/services/routing/bloc/navigation_bar_bloc.dart';
+import 'package:usefulmoney/services/routing/bloc/navigation_bar_event.dart';
+import 'package:usefulmoney/services/routing/bloc/navigation_bar_state.dart';
+import 'package:usefulmoney/views/book_view.dart';
 
 class MainPageView extends StatefulWidget {
   const MainPageView({super.key});
@@ -30,31 +31,14 @@ class _MainPageViewState extends State<MainPageView> {
 
   @override
   Widget build(BuildContext context) {
-    final items = (BuildContext context) => [
-          BottomNavigationBarItem(
-            label: '1',
-            icon: Icon(context.platformIcons.flag),
-          ),
-          BottomNavigationBarItem(
-            label: '2',
-            icon: Icon(context.platformIcons.book),
-          ),
-        ];
-    return BlocConsumer<NavigationBarRouteBloc, NavigationBarRouteState>(
+    return BlocConsumer<NavigationBarBloc, NavigationBarState>(
       listener: (context, state) {},
       builder: (context, state) {
         return PlatformTabScaffold(
-          appBarBuilder: (context, index) =>
-              PlatformAppBar(title: PlatformText('Hello')),
           tabController: _tabController,
           bodyBuilder: (context, index) {
             return [
-              Center(
-                child: PlatformTextButton(
-                  onPressed: () {},
-                  child: PlatformText('1'),
-                ),
-              ),
+              const BookView(),
               Center(
                 child: PlatformTextButton(
                   onPressed: () {},
@@ -63,13 +47,17 @@ class _MainPageViewState extends State<MainPageView> {
               ),
             ][state.index];
           },
-          items: items(context),
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(context.platformIcons.home),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(context.platformIcons.wifi),
+            ),
+          ],
           itemChanged: (index) {
-            context.read<NavigationBarRouteBloc>().add(
-                NavigationBarRouteEventGoTo(
-                    context: context,
-                    index: index,
-                    controller: _tabController));
+            context.read<NavigationBarBloc>().add(NavigationBarEventGoTo(
+                context: context, index: index, controller: _tabController));
           },
         );
       },
