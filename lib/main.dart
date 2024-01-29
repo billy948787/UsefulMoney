@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:usefulmoney/constant/data_constant.dart';
-import 'package:usefulmoney/constant/route.dart';
-import 'package:usefulmoney/services/data/bloc/data_bloc.dart';
-import 'package:usefulmoney/services/data/bloc/data_event.dart';
-import 'package:usefulmoney/services/routing/navigation_bar_cubit.dart';
-import 'package:usefulmoney/views/add_account_view.dart';
-import 'package:usefulmoney/views/main_page_view.dart';
+import 'package:usefulmoney/business_logic/constant/data_constant.dart';
+import 'package:usefulmoney/business_logic/constant/route.dart';
+import 'package:usefulmoney/business_logic/services/data/bloc/data_bloc.dart';
+import 'package:usefulmoney/business_logic/services/data/bloc/data_event.dart';
+import 'package:usefulmoney/business_logic/services/routing/navigation_bar_cubit.dart';
+import 'package:usefulmoney/ui/views/account/add_account_view.dart';
+import 'package:usefulmoney/ui/views/main_page_view.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,7 +30,14 @@ class _AppState extends State<App> {
     cubit = NavigationBarCubit(0);
     dataBloc = DataBloc(defaultEmail);
     dataBloc.add(const DataEventCreateOrGetUser());
+    dataBloc.add(const DataEventOpenDatabase());
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    dataBloc.add(const DataEventCloseDatabase());
+    super.dispose();
   }
 
   @override
