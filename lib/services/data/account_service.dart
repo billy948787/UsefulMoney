@@ -44,14 +44,10 @@ class AccountService {
 
   Future<void> _cacheAccount() async {
     await _ensureDatabaseIsOpen();
-    final user = _user;
-    if (user != null) {
-      final accounts = await getAllAccount();
-      _data = accounts;
-      _controller.add(_data);
-    } else {
-      throw ShouldCreateUserFirstException();
-    }
+
+    final accounts = await getAllAccount();
+    _data = accounts;
+    _controller.add(_data);
   }
 
   Future<List<DatabaseBook>> getAllAccount() async {
@@ -259,9 +255,9 @@ class AccountService {
       final db = await openDatabase(dbPath);
       _db = db;
       //create user table
-      await db.execute(userTable);
+      await db.execute(createUserTable);
       //create book table
-      await db.execute(bookTable);
+      await db.execute(createBookTable);
 
       await _cacheAccount();
     } on MissingPlatformDirectoryException {
