@@ -12,18 +12,10 @@ class DataEventNewAccount extends DataEvent {
   final int? value;
   final bool needGoBack;
 
-  const DataEventNewAccount({
-    this.isAdded = false,
-    this.name,
-    this.value,
-    this.needGoBack = false
-  });
+  const DataEventNewAccount(
+      {this.isAdded = false, this.name, this.value, this.needGoBack = false});
 }
 
-class DataEventCreateUser extends DataEvent {
-  final String email;
-
-  const DataEventCreateUser({
-    this.email = defaultEmail,
-  });
+class DataEventCreateOrGetUser extends DataEvent {
+  const DataEventCreateOrGetUser();
 }

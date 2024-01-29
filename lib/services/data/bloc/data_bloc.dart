@@ -1,25 +1,22 @@
 import 'package:bloc/bloc.dart';
-import 'package:usefulmoney/constant/data_constant.dart';
 import 'package:usefulmoney/services/data/account_service.dart';
 import 'package:usefulmoney/services/data/bloc/data_event.dart';
 import 'package:usefulmoney/services/data/bloc/data_state.dart';
 
 class DataBloc extends Bloc<DataEvent, DataState> {
-  DataBloc() : super(const DataStateInit(exception: null)) {
+  DataBloc(String email) : super(const DataStateInit(exception: null)) {
     final AccountService accountService = AccountService();
 
-    on<DataEventCreateUser>(
+    on<DataEventCreateOrGetUser>(
       (event, emit) async {
-        const email = defaultEmail;
-
         try {
           final user = await accountService.getUserOrCreateUser(email: email);
-          emit(DataStateCreatedUser(
+          emit(DataStateLoggedIn(
             user: user,
             exception: null,
           ));
         } on Exception catch (e) {
-          emit(DataStateCreatedUser(
+          emit(DataStateLoggedIn(
             user: null,
             exception: e,
           ));
@@ -28,8 +25,6 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     );
 
     on<DataEventNewAccount>((event, emit) async {
-      const email = defaultEmail;
-
       final isAdded = event.isAdded;
       final name = event.name;
       final value = event.value;
@@ -40,22 +35,16 @@ class DataBloc extends Bloc<DataEvent, DataState> {
           accountService.createAccount(name: name, value: value, owner: user);
           emit(const DataStateAddedNewAccount(
             exception: null,
-            needPop: false,
             hasAdd: true,
           ));
         } on Exception catch (e) {
           emit(DataStateAddedNewAccount(exception: e));
         }
       } else if (needGoBack) {
-        emit(const DataStateAddedNewAccount(
-          exception: null,
-          needPop: false,
-          hasAdd: false,
-        ));
+        emit(const DataStateHome(exception: null));
       } else {
         emit(const DataStateAddedNewAccount(
           exception: null,
-          needPop: true,
           hasAdd: false,
         ));
       }
