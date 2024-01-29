@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:usefulmoney/constant/route.dart';
-import 'package:usefulmoney/services/data/account_service.dart';
-import 'package:usefulmoney/services/data/bloc/data_bloc.dart';
-import 'package:usefulmoney/services/data/bloc/data_state.dart';
+import 'package:usefulmoney/business_logic/services/data/bloc/data_bloc.dart';
+import 'package:usefulmoney/business_logic/services/data/bloc/data_state.dart';
 import 'dart:developer' as devtool show log;
-import 'package:usefulmoney/services/routing/navigation_bar_cubit.dart';
-import 'package:usefulmoney/utils/dialogs/error_dialog.dart';
-import 'package:usefulmoney/views/add_account_view.dart';
-import 'package:usefulmoney/views/book_view.dart';
+import 'package:usefulmoney/business_logic/services/routing/navigation_bar_cubit.dart';
+import 'package:usefulmoney/utililties/dialogs/error_dialog.dart';
+import 'package:usefulmoney/ui/views/book_view.dart';
 
 class MainPageView extends StatefulWidget {
   const MainPageView({super.key});
@@ -20,19 +17,15 @@ class MainPageView extends StatefulWidget {
 
 class _MainPageViewState extends State<MainPageView> {
   late final PlatformTabController _tabController;
-  late final AccountService _accountService;
 
   @override
   void initState() {
-    _accountService = AccountService();
     _tabController = PlatformTabController(initialIndex: 0);
-    _accountService.open();
     super.initState();
   }
 
   @override
   void dispose() {
-    _accountService.close();
     _tabController.dispose();
     super.dispose();
   }
@@ -47,11 +40,6 @@ class _MainPageViewState extends State<MainPageView> {
             content: state.exception.toString(),
             context: context,
           );
-        }
-        if (state is DataStateAddedNewAccount) {
-          if (context.mounted) {
-            Navigator.pushReplacementNamed(context, addNewAccountRoute);
-          }
         }
       },
       child: PlatformTabScaffold(

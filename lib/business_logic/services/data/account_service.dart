@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:usefulmoney/constant/data_constant.dart';
-import 'package:usefulmoney/services/data/exceptions.dart';
+import 'package:usefulmoney/business_logic/constant/data_constant.dart';
+import 'package:usefulmoney/business_logic/services/data/exceptions.dart';
 import 'package:path_provider/path_provider.dart';
 
 class AccountService {
@@ -100,6 +100,7 @@ class AccountService {
 
     final account = await getAccount(id: id);
 
+    _data.removeWhere((element) => element.id == id);
     _data.add(account);
     _controller.add(_data);
 
