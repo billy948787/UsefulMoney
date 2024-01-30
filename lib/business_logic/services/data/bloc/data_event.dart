@@ -9,7 +9,7 @@ abstract class DataEvent {
 class DataEventNewOrUpdateAccount extends DataEvent {
   final bool isAdded;
   final String? name;
-  final int? value;
+  final String? value;
   final bool needGoBack;
   final DatabaseBook? account;
 
@@ -39,4 +39,8 @@ class DataEventOpenDatabase extends DataEvent {
 
 class DataEventCloseDatabase extends DataEvent {
   const DataEventCloseDatabase();
+}
+
+class DataEventResetUser extends DataEvent {
+  const DataEventResetUser();
 }

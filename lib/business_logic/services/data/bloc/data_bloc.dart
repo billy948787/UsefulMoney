@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:usefulmoney/business_logic/constant/data_constant.dart';
 import 'package:usefulmoney/business_logic/services/data/account_service.dart';
 import 'package:usefulmoney/business_logic/services/data/bloc/data_event.dart';
 import 'package:usefulmoney/business_logic/services/data/bloc/data_state.dart';
@@ -27,12 +28,13 @@ class DataBloc extends Bloc<DataEvent, DataState> {
 
     on<DataEventNewOrUpdateAccount>((event, emit) async {
       final name = event.name;
-      final value = event.value;
+      final valueString = event.value;
       final needGoBack = event.needGoBack;
       final account = event.account;
       //user want update the account
-      if (account != null && name != null && value != null) {
+      if (account != null && name != null && valueString != null) {
         try {
+          final value = int.parse(valueString);
           await accountService.updateAccount(
             id: account.id,
             accountName: name,
@@ -52,10 +54,15 @@ class DataBloc extends Bloc<DataEvent, DataState> {
         return;
       }
       //user is creatint a account
-      if (name != null && value != null) {
+      if (name != null && valueString != null) {
         try {
+          final value = int.parse(valueString);
           final user = await accountService.getUserOrCreateUser(email: email);
-          accountService.createAccount(name: name, value: value, owner: user);
+          accountService.createAccount(
+            name: name,
+            value: value,
+            owner: user,
+          );
           emit(const DataStateHome(exception: null));
           return;
         } on Exception catch (e) {
@@ -118,6 +125,14 @@ class DataBloc extends Bloc<DataEvent, DataState> {
         } on Exception catch (e) {
           emit(DataStateDatabaseClosed(exception: e));
         }
+      },
+    );
+
+    on<DataEventResetUser>(
+      (event, emit) async {
+        accountService.deleteUser(email: defaultEmail);
+        accountService.createUser(email: defaultEmail);
+        emit(state);
       },
     );
   }

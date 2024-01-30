@@ -5,8 +5,9 @@ import 'package:usefulmoney/business_logic/services/data/bloc/data_bloc.dart';
 import 'package:usefulmoney/business_logic/services/data/bloc/data_state.dart';
 import 'dart:developer' as devtool show log;
 import 'package:usefulmoney/business_logic/services/routing/navigation_bar_cubit.dart';
+import 'package:usefulmoney/ui/views/balance/balance_view.dart';
 import 'package:usefulmoney/utililties/dialogs/error_dialog.dart';
-import 'package:usefulmoney/ui/views/book_view.dart';
+import 'package:usefulmoney/ui/views/account/book_view.dart';
 
 class MainPageView extends StatefulWidget {
   const MainPageView({super.key});
@@ -47,12 +48,7 @@ class _MainPageViewState extends State<MainPageView> {
         bodyBuilder: (context, index) {
           return [
             const BookView(),
-            Center(
-              child: PlatformTextButton(
-                onPressed: () {},
-                child: PlatformText('2'),
-              ),
-            ),
+            const BalanceView(),
           ][index];
         },
         items: [
