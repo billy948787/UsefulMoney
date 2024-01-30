@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:usefulmoney/business_logic/constant/data_constant.dart';
@@ -8,9 +9,14 @@ import 'package:path_provider/path_provider.dart';
 class AccountService {
   static final _shared = AccountService._internal();
   AccountService._internal() {
-    _controller = StreamController<List<DatabaseBook>>.broadcast(
+    _accountController = StreamController<List<DatabaseBook>>.broadcast(
       onListen: () {
-        _controller.sink.add(_data);
+        _accountController.sink.add(_data);
+      },
+    );
+    _balanceController = StreamController<int>.broadcast(
+      onListen: () {
+        _balanceController.sink.add(_balance);
       },
     );
   }
@@ -19,9 +25,12 @@ class AccountService {
   Database? _db;
   DatabaseUser? _user;
   List<DatabaseBook> _data = [];
-  late final StreamController<List<DatabaseBook>> _controller;
+  int _balance = 0;
+  late final StreamController<List<DatabaseBook>> _accountController;
+  late final StreamController<int> _balanceController;
 
-  Stream<List<DatabaseBook>> get allAccounts => _controller.stream;
+  Stream<List<DatabaseBook>> get allAccounts => _accountController.stream;
+  Stream<int> get balance => _balanceController.stream;
 
   Future<DatabaseUser> getUserOrCreateUser(
       {required String email, bool setAsCurrent = true}) async {
@@ -42,12 +51,16 @@ class AccountService {
     }
   }
 
-  Future<void> _cacheAccount() async {
+  Future<void> _cache() async {
     await _ensureDatabaseIsOpen();
 
     final accounts = await getAllAccount();
+    final user = await getUser(email: defaultEmail);
+
+    _balance = user.accountBalance;
+    _balanceController.add(_balance);
     _data = accounts;
-    _controller.add(_data);
+    _accountController.add(_data);
   }
 
   Future<List<DatabaseBook>> getAllAccount() async {
@@ -84,6 +97,14 @@ class AccountService {
     await _ensureDatabaseIsOpen();
     final db = _getDatabaseOrThrow();
 
+    final query = await db.query(bookTable, where: 'id = ?', whereArgs: [id]);
+    final previousAccount = DatabaseBook.fromRow(query.first);
+    final value = previousAccount.value;
+    await updateUserBalance(
+      userId: previousAccount.userId,
+      value: value,
+    );
+
     final result = await db.update(
       bookTable,
       {
@@ -102,7 +123,7 @@ class AccountService {
 
     _data.removeWhere((element) => element.id == id);
     _data.add(account);
-    _controller.add(_data);
+    _accountController.add(_data);
 
     return account;
   }
@@ -110,6 +131,21 @@ class AccountService {
   Future<void> deleteAllAccount({required int userId}) async {
     await _ensureDatabaseIsOpen();
     final db = _getDatabaseOrThrow();
+
+    final query = await db.query(
+      bookTable,
+      where: 'user_id = ?',
+      whereArgs: [userId],
+    );
+    final accountList = query.map((map) => DatabaseBook.fromRow(map));
+    const initialValue = 0;
+    final value = accountList.fold(initialValue,
+        (previousValue, account) => previousValue + account.value);
+
+    await updateUserBalance(
+      userId: userId,
+      value: -value,
+    );
 
     final result = await db.delete(
       bookTable,
@@ -122,12 +158,20 @@ class AccountService {
     }
 
     _data.clear();
-    _controller.add(_data);
+    _accountController.add(_data);
   }
 
   Future<void> deleteAccount({required int id}) async {
     await _ensureDatabaseIsOpen();
     final db = _getDatabaseOrThrow();
+    //find the account that user want to delete, then get the value in order to change the balance.
+    final query = await db.query(bookTable, where: 'id = ?', whereArgs: [id]);
+    final account = DatabaseBook.fromRow(query.first);
+    final value = account.value;
+    await updateUserBalance(
+      userId: account.userId,
+      value: -value,
+    );
 
     final result = await db.delete(
       bookTable,
@@ -138,9 +182,8 @@ class AccountService {
     if (result != 1) {
       throw CouldNotDeleteAccount();
     }
-
     _data.removeWhere((element) => element.id == id);
-    _controller.add(_data);
+    _accountController.add(_data);
   }
 
   Future<DatabaseBook> createAccount({
@@ -164,6 +207,11 @@ class AccountService {
       bookUserIdColumn: owner.id,
     });
 
+    await updateUserBalance(
+      userId: owner.id,
+      value: value,
+    );
+
     final account = DatabaseBook(
       id: accountId,
       userId: owner.id,
@@ -172,7 +220,7 @@ class AccountService {
     );
 
     _data.add(account);
-    _controller.add(_data);
+    _accountController.add(_data);
 
     return account;
   }
@@ -192,6 +240,35 @@ class AccountService {
     } else {
       return DatabaseUser.fromRow(result.first);
     }
+  }
+
+  Future<void> updateUserBalance({
+    required int userId,
+    required int value,
+  }) async {
+    await _ensureDatabaseIsOpen();
+    final db = _getDatabaseOrThrow();
+
+    final balanceColumn = await (db.query(
+      userTable,
+      where: 'id = ?',
+      whereArgs: [userId],
+      columns: [userAccountBalanceColumn],
+    ));
+    final previousBalance =
+        balanceColumn.first[userAccountBalanceColumn] as int;
+
+    final result = await db.update(
+      userTable,
+      {userAccountBalanceColumn: previousBalance + value},
+    );
+
+    if (result != 1) {
+      throw CouldNotUpdateBalance();
+    }
+
+    _balance += value;
+    _balanceController.add(_balance);
   }
 
   Future<void> deleteUser({required String email}) async {
@@ -260,7 +337,7 @@ class AccountService {
       //create book table
       await db.execute(createBookTable);
 
-      await _cacheAccount();
+      await _cache();
     } on MissingPlatformDirectoryException {
       throw UnableToGetDocumentDirectoryException();
     }

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:usefulmoney/business_logic/constant/route.dart';
+import 'package:usefulmoney/business_logic/interface_operation/bloc/ui_bloc.dart';
+import 'package:usefulmoney/business_logic/interface_operation/bloc/ui_event.dart';
+import 'package:usefulmoney/business_logic/interface_operation/bloc/ui_state.dart';
 import 'package:usefulmoney/business_logic/services/data/account_service.dart';
 import 'package:usefulmoney/business_logic/services/data/bloc/data_bloc.dart';
 import 'package:usefulmoney/business_logic/services/data/bloc/data_event.dart';
@@ -65,9 +68,29 @@ class _BookViewState extends State<BookView> {
         }
       },
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           PlatformAppBar(
             trailingActions: [
+              BlocBuilder<UiBloc, UiState>(
+                builder: (context, state) {
+                  if (state is UiStateHome) {
+                    return PlatformTextButton(
+                      onPressed: () => context.read<UiBloc>().add(
+                            const UiEventDeleteAccounts(cancel: false),
+                          ),
+                      child: const Text('Delete'),
+                    );
+                  } else {
+                    return PlatformTextButton(
+                      onPressed: () => context.read<UiBloc>().add(
+                            const UiEventDeleteAccounts(cancel: true),
+                          ),
+                      child: const Text('Cancel'),
+                    );
+                  }
+                },
+              ),
               PlatformIconButton(
                 icon: Icon(context.platformIcons.add),
                 onPressed: () {
@@ -81,7 +104,7 @@ class _BookViewState extends State<BookView> {
             ],
           ),
           SizedBox(
-            height: 200,
+            height: 400,
             child: StreamBuilder(
               stream: _accountService.allAccounts,
               builder: (context, snapshot) {
@@ -101,6 +124,14 @@ class _BookViewState extends State<BookView> {
                           .read<DataBloc>()
                           .add(DataEventNewOrUpdateAccount(account: account));
                     },
+                    deleteInstantly: (account) {
+                      context.read<DataBloc>().add(DataEventDeleteAccount(
+                            id: account.id,
+                            wantDelete: true,
+                          ));
+                    },
+                    isSelected:
+                        List.generate(snapshot.data!.length, (index) => false),
                   );
                 } else {
                   return PlatformCircularProgressIndicator();

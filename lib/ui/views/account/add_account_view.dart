@@ -8,6 +8,8 @@ import 'package:usefulmoney/business_logic/services/data/bloc/data_event.dart';
 import 'package:usefulmoney/business_logic/services/data/bloc/data_state.dart';
 import 'dart:developer' as devtool show log;
 
+import 'package:usefulmoney/utililties/dialogs/error_dialog.dart';
+
 class AddAccountView extends StatefulWidget {
   const AddAccountView({super.key});
 
@@ -42,9 +44,16 @@ class _AddAccountViewState extends State<AddAccountView> {
       _value.text = account.value.toString();
     }
     return BlocListener<DataBloc, DataState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state is DataStateHome) {
           Navigator.of(context).pushReplacementNamed(homeRoute);
+        }
+        if (state.exception != null) {
+          await showErrorDialog(
+            title: 'Error',
+            content: state.exception.toString(),
+            context: context,
+          );
         }
       },
       child: Scaffold(
@@ -80,7 +89,7 @@ class _AddAccountViewState extends State<AddAccountView> {
               icon: Icon(context.platformIcons.add),
               onPressed: () {
                 final name = _name.text;
-                final value = int.tryParse(_value.text);
+                final value = _value.text;
                 if (account != null) {
                   context.read<DataBloc>().add(DataEventNewOrUpdateAccount(
                         name: name,

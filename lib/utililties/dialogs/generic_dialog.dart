@@ -13,8 +13,8 @@ Future<T?> showGenericDialog<T>(
     context: context,
     builder: (context) {
       return PlatformAlertDialog(
-          title: PlatformText(title),
-          content: PlatformText(content),
+          title: Text(title),
+          content: Text(content),
           actions: options.keys.map((title) {
             final value = options[title];
             return PlatformTextButton(
