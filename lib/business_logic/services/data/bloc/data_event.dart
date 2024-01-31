@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:usefulmoney/business_logic/services/data/account_service.dart';
+import 'package:usefulmoney/business_logic/services/data/type/database_book.dart';
 
 @immutable
 abstract class DataEvent {
