@@ -45,3 +45,13 @@ class DataEventCloseDatabase extends DataEvent {
 class DataEventResetUser extends DataEvent {
   const DataEventResetUser();
 }
+
+class DataEventDeleteListAccount extends DataEvent {
+  final int? id;
+  final bool? needAddtoListOrRemove;
+  final bool? wantDelete;
+  final List<DatabaseBook>? accounts;
+
+  const DataEventDeleteListAccount(
+      {this.id, this.needAddtoListOrRemove, this.wantDelete, this.accounts});
+}

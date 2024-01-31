@@ -5,9 +5,12 @@ import 'package:usefulmoney/business_logic/services/data/bloc/data_event.dart';
 import 'package:usefulmoney/business_logic/services/data/bloc/data_state.dart';
 import 'dart:developer' as devtool show log;
 
+import 'package:usefulmoney/business_logic/services/data/type/database_book.dart';
+
 class DataBloc extends Bloc<DataEvent, DataState> {
   DataBloc(String email) : super(const DataStateInit(exception: null)) {
     final AccountService accountService = AccountService();
+    List<DatabaseBook> deleteList = [];
 
     on<DataEventCreateOrGetUser>(
       (event, emit) async {
@@ -130,9 +133,40 @@ class DataBloc extends Bloc<DataEvent, DataState> {
 
     on<DataEventResetUser>(
       (event, emit) async {
+        final user = await accountService.getUser(email: email);
+        accountService.deleteAllAccount(userId: user.id);
         accountService.deleteUser(email: defaultEmail);
         accountService.createUser(email: defaultEmail);
         emit(state);
+      },
+    );
+
+    on<DataEventDeleteListAccount>(
+      (event, emit) async {
+        final id = event.id;
+        final needAddtoListOrRemove = event.needAddtoListOrRemove;
+        final wantDelete = event.wantDelete;
+        final accounts = event.accounts;
+        if (accounts != null && needAddtoListOrRemove != null) {
+          if (needAddtoListOrRemove) {
+            deleteList.clear();
+            deleteList = List.from(accounts);
+          } else {
+            deleteList.clear();
+          }
+        }
+        if (id != null && needAddtoListOrRemove != null) {
+          final account = await accountService.getAccount(id: id);
+          if (needAddtoListOrRemove) {
+            deleteList.add(account);
+          } else {
+            deleteList.removeWhere((element) => element.id == id);
+          }
+        } else if (wantDelete != null && deleteList.isNotEmpty) {
+          for (final element in deleteList) {
+            await accountService.deleteAccount(id: element.id);
+          }
+        }
       },
     );
   }

@@ -1,10 +1,11 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:usefulmoney/business_logic/interface_operation/bloc/ui_bloc.dart';
+import 'package:usefulmoney/business_logic/interface_operation/bloc/ui_event.dart';
 import 'package:usefulmoney/business_logic/interface_operation/bloc/ui_state.dart';
-import 'package:usefulmoney/business_logic/services/data/account_service.dart';
+import 'package:usefulmoney/business_logic/services/data/bloc/data_bloc.dart';
+import 'package:usefulmoney/business_logic/services/data/bloc/data_event.dart';
 import 'package:usefulmoney/business_logic/services/data/type/database_book.dart';
 import 'dart:developer' as devtool show log;
 
@@ -34,7 +35,29 @@ class AccountListView extends StatefulWidget {
 class _AccountListViewState extends State<AccountListView> {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<UiBloc, UiState>(
+    return BlocConsumer<UiBloc, UiState>(
+      listener: (context, state) {
+        if (state is UiStateDeleteAllAccount) {
+          for (int i = 0; i < widget.isSelected.length; i++) {
+            widget.isSelected[i] = true;
+          }
+          context.read<DataBloc>().add(DataEventDeleteListAccount(
+              accounts: widget.accounts, needAddtoListOrRemove: true));
+          context
+              .read<UiBloc>()
+              .add(const UiEventDeleteAccounts(cancel: false));
+        }
+        if (state is UiStateCancelAllAccount) {
+          for (int i = 0; i < widget.isSelected.length; i++) {
+            widget.isSelected[i] = false;
+          }
+          context.read<DataBloc>().add(DataEventDeleteListAccount(
+              accounts: widget.accounts, needAddtoListOrRemove: false));
+          context.read<UiBloc>().add(const UiEventDeleteAccounts(
+                cancel: true,
+              ));
+        }
+      },
       builder: (context, state) {
         if (state is UiStateHome) {
           return ListView.builder(
@@ -73,6 +96,9 @@ class _AccountListViewState extends State<AccountListView> {
                 onChanged: (value) {
                   setState(() {
                     widget.isSelected[index] = value!;
+                    context.read<DataBloc>().add(DataEventDeleteListAccount(
+                        id: widget.accounts[index].id,
+                        needAddtoListOrRemove: value));
                   });
                 },
                 title: Text(

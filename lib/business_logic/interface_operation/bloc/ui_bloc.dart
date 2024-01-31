@@ -13,5 +13,17 @@ class UiBloc extends Bloc<UiEvent, UiState> {
         }
       },
     );
+
+    on<UiEventSelectAllAccountsToDelete>(
+      (event, emit) {
+        emit(const UiStateDeleteAllAccount());
+      },
+    );
+
+    on<UiEventDeselectAllAccount>(
+      (event, emit) {
+        emit(const UiStateCancelAllAccount());
+      },
+    );
   }
 }
