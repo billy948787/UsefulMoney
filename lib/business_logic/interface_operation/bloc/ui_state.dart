@@ -18,3 +18,17 @@ class UiStateDeleting extends UiState {
   @override
   List<Object?> get props => [];
 }
+
+class UiStateDeleteAllAccount extends UiState {
+  const UiStateDeleteAllAccount();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class UiStateCancelAllAccount extends UiState {
+  const UiStateCancelAllAccount();
+
+  @override
+  List<Object?> get props => [];
+}

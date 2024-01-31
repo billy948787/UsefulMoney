@@ -82,11 +82,39 @@ class _BookViewState extends State<BookView> {
                       child: const Text('Delete'),
                     );
                   } else {
-                    return PlatformTextButton(
-                      onPressed: () => context.read<UiBloc>().add(
-                            const UiEventDeleteAccounts(cancel: true),
-                          ),
-                      child: const Text('Cancel'),
+                    return Row(
+                      children: [
+                        PlatformTextButton(
+                          onPressed: () {
+                            context
+                                .read<UiBloc>()
+                                .add(const UiEventDeselectAllAccount());
+                            context.read<UiBloc>().add(
+                                  const UiEventDeleteAccounts(cancel: true),
+                                );
+                          },
+                          child: const Text('Cancel'),
+                        ),
+                        PlatformTextButton(
+                          onPressed: () {
+                            context.read<DataBloc>().add(
+                                const DataEventDeleteListAccount(
+                                    wantDelete: true));
+                            context
+                                .read<UiBloc>()
+                                .add(const UiEventDeleteAccounts(cancel: true));
+                          },
+                          child: const Text('Confirm'),
+                        ),
+                        PlatformTextButton(
+                          onPressed: () {
+                            context
+                                .read<UiBloc>()
+                                .add(const UiEventSelectAllAccountsToDelete());
+                          },
+                          child: const Text('Select all'),
+                        ),
+                      ],
                     );
                   }
                 },
@@ -103,8 +131,7 @@ class _BookViewState extends State<BookView> {
               ),
             ],
           ),
-          SizedBox(
-            height: 400,
+          Expanded(
             child: StreamBuilder(
               stream: _accountService.allAccounts,
               builder: (context, snapshot) {

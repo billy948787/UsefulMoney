@@ -41,6 +41,12 @@ class _BalanceViewState extends State<BalanceView> {
               }
             },
           ),
+          TextButton(
+            onPressed: () {
+              context.read<DataBloc>().add(const DataEventResetUser());
+            },
+            child: const Text('reset'),
+          ),
         ],
       ),
     );

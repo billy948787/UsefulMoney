@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:usefulmoney/business_logic/constant/route.dart';
-import 'package:usefulmoney/business_logic/services/data/account_service.dart';
 import 'package:usefulmoney/business_logic/services/data/bloc/data_bloc.dart';
 import 'package:usefulmoney/business_logic/services/data/bloc/data_event.dart';
 import 'package:usefulmoney/business_logic/services/data/bloc/data_state.dart';
@@ -61,17 +60,22 @@ class _AddAccountViewState extends State<AddAccountView> {
         body: Column(
           children: [
             const SizedBox(
-              height: 10,
+              height: 50,
             ),
-            PlatformIconButton(
-              icon: Icon(context.platformIcons.clear),
-              onPressed: () {
-                final state = context.read<DataBloc>().state;
-                devtool.log(state.toString());
-                context.read<DataBloc>().add(const DataEventNewOrUpdateAccount(
-                      needGoBack: true,
-                    ));
-              },
+            Align(
+              alignment: Alignment.centerLeft,
+              child: PlatformIconButton(
+                icon: Icon(context.platformIcons.clear),
+                onPressed: () {
+                  final state = context.read<DataBloc>().state;
+                  devtool.log(state.toString());
+                  context
+                      .read<DataBloc>()
+                      .add(const DataEventNewOrUpdateAccount(
+                        needGoBack: true,
+                      ));
+                },
+              ),
             ),
             const SizedBox(
               height: 30,
