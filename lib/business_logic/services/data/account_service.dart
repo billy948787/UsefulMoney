@@ -5,6 +5,8 @@ import 'package:sqflite/sqflite.dart';
 import 'package:usefulmoney/business_logic/constant/data_constant.dart';
 import 'package:usefulmoney/business_logic/services/data/exceptions.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:usefulmoney/business_logic/services/data/type/database_book.dart';
+import 'package:usefulmoney/business_logic/services/data/type/database_user.dart';
 
 class AccountService {
   static final _shared = AccountService._internal();
@@ -344,50 +346,3 @@ class AccountService {
   }
 }
 
-class DatabaseUser {
-  final int id;
-  final int accountBalance;
-  final String email;
-
-  DatabaseUser(
-      {required this.id, required this.accountBalance, required this.email});
-
-  DatabaseUser.fromRow(Map<String, Object?> map)
-      : id = map[userIdColumn] as int,
-        accountBalance = map[userAccountBalanceColumn] as int,
-        email = map[userEmailColumn] as String;
-
-  @override
-  String toString() => 'userId: $id Accountbalance : $accountBalance';
-
-  @override
-  bool operator ==(covariant DatabaseUser other) => other.id == id;
-
-  @override
-  int get hashCode => id.hashCode;
-}
-
-class DatabaseBook {
-  final int id;
-  final int userId;
-  final int value;
-  final String accountName;
-
-  DatabaseBook(
-      {required this.id,
-      required this.userId,
-      required this.value,
-      required this.accountName});
-
-  DatabaseBook.fromRow(Map<String, Object?> map)
-      : id = map[bookIdColumn] as int,
-        userId = map[bookUserIdColumn] as int,
-        value = map[bookValueColumn] as int,
-        accountName = map[bookAccountColumn] as String;
-
-  @override
-  bool operator ==(covariant DatabaseBook other) => other.id == id;
-
-  @override
-  int get hashCode => id.hashCode;
-}
