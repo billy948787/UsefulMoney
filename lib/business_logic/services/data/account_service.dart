@@ -24,6 +24,7 @@ class AccountService {
   factory AccountService() => _shared;
 
   Database? _db;
+  // ignore: unused_field
   DatabaseUser? _user;
   List<DatabaseBook> _data = [];
   int _balance = 0;

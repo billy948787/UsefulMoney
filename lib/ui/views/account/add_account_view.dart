@@ -40,6 +40,7 @@ class _AddAccountViewState extends State<AddAccountView> {
         ModalRoute.of(context)!.settings.arguments as DatabaseBook?;
     if (account != null) {
       _name.text = account.accountName;
+      context.read<CounterCubit>().clear();
       context.read<CounterCubit>().add(account.value.toString());
     }
     return BlocListener<DataBloc, DataState>(
@@ -85,7 +86,31 @@ class _AddAccountViewState extends State<AddAccountView> {
                   controller: _name,
                   keyboardType: TextInputType.name,
                 ),
-                Text(state.value),
+                Container(
+                  color: Theme.of(context).colorScheme.primary,
+                  child: Column(
+                    children: [
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(20.0),
+                                bottomLeft: Radius.circular(20.0)),
+                            color: Colors.white,
+                          ),
+                          width: 250,
+                          child: Align(
+                              alignment: Alignment.centerRight,
+                              child: Text(
+                                state.value,
+                                style: const TextStyle(fontSize: 30),
+                              )),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 IconButton(
                   icon: const Icon(Icons.add),
                   onPressed: () {

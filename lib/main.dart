@@ -48,7 +48,9 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(useMaterial3: true),
+      theme: ThemeData(
+        useMaterial3: true,
+      ),
       title: 'UsefulMoney',
       localizationsDelegates: const [
         DefaultMaterialLocalizations.delegate,
@@ -72,6 +74,7 @@ class _AppState extends State<App> {
               child: const MainPageView(),
             ),
       },
+      
     );
   }
 }
