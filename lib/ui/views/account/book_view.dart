@@ -164,7 +164,7 @@ class _BookViewState extends State<BookView> {
                 onPressed: () {
                   final state = context.read<DataBloc>().state;
                   devtool.log(state.toString());
-                  context.read<CounterCubit>().add('');
+                  context.read<CounterCubit>().clear();
                   context
                       .read<DataBloc>()
                       .add(const DataEventNewOrUpdateAccount());
