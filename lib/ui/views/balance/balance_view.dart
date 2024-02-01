@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:usefulmoney/business_logic/services/data/account_service.dart';
 import 'package:usefulmoney/business_logic/services/data/bloc/data_bloc.dart';
 import 'package:usefulmoney/business_logic/services/data/bloc/data_event.dart';
@@ -37,7 +36,7 @@ class _BalanceViewState extends State<BalanceView> {
               if (snapshot.hasData) {
                 return Text(snapshot.data.toString());
               } else {
-                return PlatformCircularProgressIndicator();
+                return const CircularProgressIndicator();
               }
             },
           ),

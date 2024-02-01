@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:usefulmoney/business_logic/interface_operation/bloc/ui_bloc.dart';
 import 'package:usefulmoney/business_logic/interface_operation/bloc/ui_event.dart';
 import 'package:usefulmoney/business_logic/interface_operation/bloc/ui_state.dart';
@@ -71,13 +70,12 @@ class _AccountListViewState extends State<AccountListView> {
                 background: Container(
                   decoration: const BoxDecoration(color: Colors.red),
                   alignment: Alignment.centerRight,
-                  child:
-                      Icon(context.platformIcons.delete, color: Colors.black),
+                  child: const Icon(Icons.delete, color: Colors.black),
                 ),
                 confirmDismiss: (direction) {
                   return showDeleteDialog(context);
                 },
-                child: PlatformListTile(
+                child: ListTile(
                   title: Text(
                     widget.accounts[index].accountName,
                   ),

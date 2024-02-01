@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:usefulmoney/business_logic/constant/route.dart';
+import 'package:usefulmoney/business_logic/services/counting/bloc/couter_cubit.dart';
+import 'package:usefulmoney/business_logic/services/counting/bloc/couter_state.dart';
 import 'package:usefulmoney/business_logic/services/data/bloc/data_bloc.dart';
 import 'package:usefulmoney/business_logic/services/data/bloc/data_event.dart';
 import 'package:usefulmoney/business_logic/services/data/bloc/data_state.dart';
 import 'package:usefulmoney/business_logic/services/data/type/database_book.dart';
+import 'package:usefulmoney/ui/widgets/numpad.dart';
 import 'dart:developer' as devtool show log;
 
 import 'package:usefulmoney/utililties/dialogs/error_dialog.dart';
@@ -19,19 +21,16 @@ class AddAccountView extends StatefulWidget {
 
 class _AddAccountViewState extends State<AddAccountView> {
   late final TextEditingController _name;
-  late final TextEditingController _value;
 
   @override
   void initState() {
     _name = TextEditingController();
-    _value = TextEditingController();
     super.initState();
   }
 
   @override
   void dispose() {
     _name.dispose();
-    _value.dispose();
     super.dispose();
   }
 
@@ -41,7 +40,7 @@ class _AddAccountViewState extends State<AddAccountView> {
         ModalRoute.of(context)!.settings.arguments as DatabaseBook?;
     if (account != null) {
       _name.text = account.accountName;
-      _value.text = account.value.toString();
+      context.read<CounterCubit>().add(account.value.toString());
     }
     return BlocListener<DataBloc, DataState>(
       listener: (context, state) async {
@@ -56,65 +55,68 @@ class _AddAccountViewState extends State<AddAccountView> {
           );
         }
       },
-      child: Scaffold(
-        body: Column(
-          children: [
-            const SizedBox(
-              height: 50,
+      child: BlocBuilder<CounterCubit, CounterState>(
+        builder: (context, state) {
+          return Scaffold(
+            body: Column(
+              children: [
+                const SizedBox(
+                  height: 50,
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: IconButton(
+                    icon: const Icon(Icons.clear),
+                    onPressed: () {
+                      final state = context.read<DataBloc>().state;
+                      devtool.log(state.toString());
+                      context
+                          .read<DataBloc>()
+                          .add(const DataEventNewOrUpdateAccount(
+                            needGoBack: true,
+                          ));
+                    },
+                  ),
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                TextField(
+                  controller: _name,
+                  keyboardType: TextInputType.name,
+                ),
+                Text(state.value),
+                IconButton(
+                  icon: const Icon(Icons.add),
+                  onPressed: () {
+                    final name = _name.text;
+                    final value = state.value;
+                    if (account != null) {
+                      context.read<DataBloc>().add(DataEventNewOrUpdateAccount(
+                            name: name,
+                            value: value,
+                            needGoBack: true,
+                            isAdded: true,
+                            account: account,
+                          ));
+                    } else {
+                      context.read<DataBloc>().add(DataEventNewOrUpdateAccount(
+                            name: name,
+                            value: value,
+                            needGoBack: true,
+                            isAdded: true,
+                          ));
+                    }
+                  },
+                ),
+                const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Numpad(),
+                ),
+              ],
             ),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: PlatformIconButton(
-                icon: Icon(context.platformIcons.clear),
-                onPressed: () {
-                  final state = context.read<DataBloc>().state;
-                  devtool.log(state.toString());
-                  context
-                      .read<DataBloc>()
-                      .add(const DataEventNewOrUpdateAccount(
-                        needGoBack: true,
-                      ));
-                },
-              ),
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            PlatformTextField(
-              controller: _name,
-              keyboardType: TextInputType.name,
-              hintText: 'Name',
-            ),
-            PlatformTextField(
-              controller: _value,
-              keyboardType: TextInputType.number,
-              hintText: 'Value',
-            ),
-            PlatformIconButton(
-              icon: Icon(context.platformIcons.add),
-              onPressed: () {
-                final name = _name.text;
-                final value = _value.text;
-                if (account != null) {
-                  context.read<DataBloc>().add(DataEventNewOrUpdateAccount(
-                        name: name,
-                        value: value,
-                        needGoBack: true,
-                        isAdded: true,
-                        account: account,
-                      ));
-                } else {
-                  context.read<DataBloc>().add(DataEventNewOrUpdateAccount(
-                        name: name,
-                        value: value,
-                        needGoBack: true,
-                        isAdded: true,
-                      ));
-                }
-              },
-            )
-          ],
-        ),
+          );
+        },
       ),
     );
   }
