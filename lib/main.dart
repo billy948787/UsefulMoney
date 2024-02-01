@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:usefulmoney/business_logic/constant/data_constant.dart';
-import 'package:usefulmoney/business_logic/constant/route.dart';
-import 'package:usefulmoney/business_logic/interface_operation/bloc/ui_bloc.dart';
-import 'package:usefulmoney/business_logic/services/counting/bloc/couter_cubit.dart';
-import 'package:usefulmoney/business_logic/services/data/bloc/data_bloc.dart';
-import 'package:usefulmoney/business_logic/services/data/bloc/data_event.dart';
-import 'package:usefulmoney/ui/views/account/add_account_view.dart';
-import 'package:usefulmoney/ui/views/main_page_view.dart';
+import 'package:usefulmoney/utils/constants/data_constant.dart';
+import 'package:usefulmoney/routes/route.dart';
+import 'package:usefulmoney/domain/interface_operation/bloc/ui_bloc.dart';
+import 'package:usefulmoney/domain/services/counting/bloc/couter_cubit.dart';
+import 'package:usefulmoney/domain/services/data/bloc/data_bloc.dart';
+import 'package:usefulmoney/domain/services/data/bloc/data_event.dart';
+import 'package:usefulmoney/pages/account/add_account_view.dart';
+import 'package:usefulmoney/pages/main_page_view.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -74,7 +74,6 @@ class _AppState extends State<App> {
               child: const MainPageView(),
             ),
       },
-      
     );
   }
 }
