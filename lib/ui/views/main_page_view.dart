@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:usefulmoney/business_logic/services/data/bloc/data_bloc.dart';
 import 'package:usefulmoney/business_logic/services/data/bloc/data_state.dart';
 import 'dart:developer' as devtool show log;
-import 'package:usefulmoney/business_logic/services/routing/navigation_bar_cubit.dart';
 import 'package:usefulmoney/ui/views/balance/balance_view.dart';
 import 'package:usefulmoney/utililties/dialogs/error_dialog.dart';
 import 'package:usefulmoney/ui/views/account/book_view.dart';
@@ -17,19 +15,7 @@ class MainPageView extends StatefulWidget {
 }
 
 class _MainPageViewState extends State<MainPageView> {
-  late final PlatformTabController _tabController;
-
-  @override
-  void initState() {
-    _tabController = PlatformTabController(initialIndex: 0);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
+  int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -43,29 +29,22 @@ class _MainPageViewState extends State<MainPageView> {
           );
         }
       },
-      child: PlatformTabScaffold(
-        tabController: _tabController,
-        bodyBuilder: (context, index) {
-          return [
-            const BookView(),
-            const BalanceView(),
-          ][index];
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(context.platformIcons.home),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(context.platformIcons.wifi),
-          ),
-        ],
-        itemChanged: (index) {
-          context.read<NavigationBarCubit>().changeIndex(
-                context: context,
-                controller: _tabController,
-                target: index,
-              );
-        },
+      child: Scaffold(
+        bottomNavigationBar: NavigationBar(
+            destinations: const [
+              NavigationDestination(icon: Icon(Icons.home), label: ''),
+              NavigationDestination(icon: Icon(Icons.wifi), label: ''),
+            ],
+            onDestinationSelected: (value) {
+              setState(() {
+                _currentIndex = value;
+              });
+            },
+            selectedIndex: _currentIndex),
+        body: [
+          const BookView(),
+          const BalanceView(),
+        ][_currentIndex],
       ),
     );
   }

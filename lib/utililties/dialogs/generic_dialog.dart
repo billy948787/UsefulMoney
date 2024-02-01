@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 typedef OptionsBuilder<T> = Map<String, T?> Function();
 
@@ -12,12 +11,12 @@ Future<T?> showGenericDialog<T>(
   return showDialog(
     context: context,
     builder: (context) {
-      return PlatformAlertDialog(
+      return AlertDialog(
           title: Text(title),
           content: Text(content),
           actions: options.keys.map((title) {
             final value = options[title];
-            return PlatformTextButton(
+            return TextButton(
               onPressed: () {
                 if (value != null) {
                   Navigator.of(context).pop(value);
@@ -25,7 +24,7 @@ Future<T?> showGenericDialog<T>(
                   Navigator.of(context).pop();
                 }
               },
-              child: PlatformText(title),
+              child: Text(title),
             );
           }).toList());
     },

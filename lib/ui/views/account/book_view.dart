@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:usefulmoney/business_logic/constant/route.dart';
 import 'package:usefulmoney/business_logic/interface_operation/bloc/ui_bloc.dart';
 import 'package:usefulmoney/business_logic/interface_operation/bloc/ui_event.dart';
 import 'package:usefulmoney/business_logic/interface_operation/bloc/ui_state.dart';
+import 'package:usefulmoney/business_logic/services/counting/bloc/couter_cubit.dart';
 import 'package:usefulmoney/business_logic/services/data/account_service.dart';
 import 'package:usefulmoney/business_logic/services/data/bloc/data_bloc.dart';
 import 'package:usefulmoney/business_logic/services/data/bloc/data_event.dart';
@@ -70,12 +70,12 @@ class _BookViewState extends State<BookView> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          PlatformAppBar(
-            trailingActions: [
+          AppBar(
+            actions: [
               BlocBuilder<UiBloc, UiState>(
                 builder: (context, state) {
                   if (state is UiStateHome) {
-                    return PlatformTextButton(
+                    return TextButton(
                       onPressed: () => context.read<UiBloc>().add(
                             const UiEventDeleteAccounts(cancel: false),
                           ),
@@ -84,7 +84,7 @@ class _BookViewState extends State<BookView> {
                   } else {
                     return Row(
                       children: [
-                        PlatformTextButton(
+                        TextButton(
                           onPressed: () {
                             context
                                 .read<UiBloc>()
@@ -95,7 +95,7 @@ class _BookViewState extends State<BookView> {
                           },
                           child: const Text('Cancel'),
                         ),
-                        PlatformTextButton(
+                        TextButton(
                           onPressed: () {
                             context.read<DataBloc>().add(
                                 const DataEventDeleteListAccount(
@@ -106,7 +106,7 @@ class _BookViewState extends State<BookView> {
                           },
                           child: const Text('Confirm'),
                         ),
-                        PlatformTextButton(
+                        TextButton(
                           onPressed: () {
                             context
                                 .read<UiBloc>()
@@ -117,16 +117,6 @@ class _BookViewState extends State<BookView> {
                       ],
                     );
                   }
-                },
-              ),
-              PlatformIconButton(
-                icon: Icon(context.platformIcons.add),
-                onPressed: () {
-                  final state = context.read<DataBloc>().state;
-                  devtool.log(state.toString());
-                  context
-                      .read<DataBloc>()
-                      .add(const DataEventNewOrUpdateAccount());
                 },
               ),
             ],
@@ -161,11 +151,29 @@ class _BookViewState extends State<BookView> {
                         List.generate(snapshot.data!.length, (index) => false),
                   );
                 } else {
-                  return PlatformCircularProgressIndicator();
+                  return const CircularProgressIndicator();
                 }
               },
             ),
           ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: FloatingActionButton(
+                onPressed: () {
+                  final state = context.read<DataBloc>().state;
+                  devtool.log(state.toString());
+                  context.read<CounterCubit>().add('');
+                  context
+                      .read<DataBloc>()
+                      .add(const DataEventNewOrUpdateAccount());
+                },
+                shape: const CircleBorder(),
+                child: const Icon(Icons.add),
+              ),
+            ),
+          )
         ],
       ),
     );
