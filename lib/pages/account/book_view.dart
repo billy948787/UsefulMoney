@@ -12,7 +12,7 @@ import 'package:usefulmoney/domain/services/data/bloc/data_state.dart';
 import 'dart:developer' as devtool show log;
 
 import 'package:usefulmoney/pages/account/account_list_view.dart';
-import 'package:usefulmoney/utils/dialogs/delete_dialog.dart';
+import 'package:usefulmoney/widgets/dialogs/delete_dialog.dart';
 
 class BookView extends StatefulWidget {
   const BookView({super.key});

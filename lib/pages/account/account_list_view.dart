@@ -8,7 +8,7 @@ import 'package:usefulmoney/domain/services/data/bloc/data_event.dart';
 import 'package:usefulmoney/domain/services/data/type/database_book.dart';
 import 'dart:developer' as devtool show log;
 
-import 'package:usefulmoney/utils/dialogs/delete_dialog.dart';
+import 'package:usefulmoney/widgets/dialogs/delete_dialog.dart';
 
 typedef DeleteCallBack = void Function(DatabaseBook);
 typedef OnTapCallBack = void Function(DatabaseBook);

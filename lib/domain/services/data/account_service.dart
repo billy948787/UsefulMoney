@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:usefulmoney/domain/services/data/type/database_template.dart';
 import 'package:usefulmoney/utils/constants/data_constant.dart';
 import 'package:usefulmoney/domain/services/data/exceptions.dart';
 import 'package:path_provider/path_provider.dart';
@@ -20,33 +21,35 @@ class AccountService {
         _balanceController.sink.add(_balance);
       },
     );
+    _templateController = StreamController.broadcast(
+      onListen: () {
+        _templateController.sink.add(_templates);
+      },
+    );
   }
   factory AccountService() => _shared;
 
   Database? _db;
   // ignore: unused_field
-  DatabaseUser? _user;
   List<DatabaseBook> _data = [];
   int _balance = 0;
+  List<DatabaseTemplate> _templates = [];
+  late final StreamController<List<DatabaseTemplate>> _templateController;
   late final StreamController<List<DatabaseBook>> _accountController;
   late final StreamController<int> _balanceController;
 
   Stream<List<DatabaseBook>> get allAccounts => _accountController.stream;
   Stream<int> get balance => _balanceController.stream;
+  Stream<List<DatabaseTemplate>> get allTemplates => _templateController.stream;
 
-  Future<DatabaseUser> getUserOrCreateUser(
-      {required String email, bool setAsCurrent = true}) async {
+  Future<DatabaseUser> getUserOrCreateUser({required String email}) async {
     try {
       final user = await getUser(email: email);
-      if (setAsCurrent) {
-        _user = user;
-      }
+
       return user;
     } on UserNotExistException {
       final user = await createUser(email: email);
-      if (setAsCurrent) {
-        _user = user;
-      }
+
       return user;
     } catch (e) {
       rethrow;
@@ -61,6 +64,8 @@ class AccountService {
 
     _balance = user.accountBalance;
     _balanceController.add(_balance);
+    _templates = await getAllTemplate(userId: user.id);
+    _templateController.add(_templates);
     _data = accounts;
     _accountController.add(_data);
   }
@@ -299,6 +304,116 @@ class AccountService {
     );
   }
 
+  Future<DatabaseTemplate> updateTemplate(
+      {required String name, required int id}) async {
+    await _ensureDatabaseIsOpen();
+    final db = _getDatabaseOrThrow();
+
+    final result = await db.update(
+      templateTable,
+      {
+        templateNameColumn: name,
+      },
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+
+    if (result != 1) {
+      throw CouldNotUpdateTemplate();
+    }
+
+    final template = await getTemplate(id: id);
+    _templates.removeWhere((element) => element.id == id);
+    _templates.add(template);
+    _templateController.add(_templates);
+
+    return template;
+  }
+
+  Future<void> deleteAllTemplate({required int userId}) async {
+    await _ensureDatabaseIsOpen();
+    final db = _getDatabaseOrThrow();
+
+    final result = await db.delete(
+      templateTable,
+      where: 'user_id = ?',
+      whereArgs: [userId],
+    );
+
+    if (result < 1) {
+      throw CouldNotDeleteAccount();
+    }
+
+    _templates = [];
+    _templateController.add(_templates);
+  }
+
+  Future<void> deleteTemplate({required int id}) async {
+    await _ensureDatabaseIsOpen();
+    final db = _getDatabaseOrThrow();
+
+    final result = await db.delete(
+      templateTable,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+
+    if (result != 1) {
+      throw CouldNotDeleteTemplate();
+    }
+
+    _templates.removeWhere((element) => element.id == id);
+    _templateController.add(_templates);
+  }
+
+  Future<List<DatabaseTemplate>> getAllTemplate({required int userId}) async {
+    await _ensureDatabaseIsOpen();
+    final db = _getDatabaseOrThrow();
+
+    final list = await db.query(
+      templateTable,
+      where: 'user_id = ?',
+      whereArgs: [userId],
+    );
+
+    return list.map((map) => DatabaseTemplate.fromRow(map)).toList();
+  }
+
+  Future<DatabaseTemplate> getTemplate({required int id}) async {
+    await _ensureDatabaseIsOpen();
+    final db = _getDatabaseOrThrow();
+
+    final result = await db.query(
+      templateTable,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+
+    return DatabaseTemplate.fromRow(result.first);
+  }
+
+  Future<DatabaseTemplate> createTemplate(
+      {required String name, required int userId}) async {
+    await _ensureDatabaseIsOpen();
+    final db = _getDatabaseOrThrow();
+
+    final id = await db.insert(templateTable, {
+      templateNameColumn: name,
+      templateUserIdColumn: userId,
+    });
+
+    final template = DatabaseTemplate(
+      id: id,
+      name: name,
+      userId: userId,
+    );
+
+    _templates.add(template);
+    _templateController.add(_templates);
+
+    return template;
+  }
+
   Database _getDatabaseOrThrow() {
     final db = _db;
     if (db == null) {
@@ -338,6 +453,8 @@ class AccountService {
       await db.execute(createUserTable);
       //create book table
       await db.execute(createBookTable);
+      //create template table
+      await db.execute(createTemplateTable);
 
       await _cache();
     } on MissingPlatformDirectoryException {
@@ -345,4 +462,3 @@ class AccountService {
     }
   }
 }
-

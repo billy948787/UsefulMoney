@@ -17,3 +17,7 @@ class CouldNotUpdateAccount implements Exception{}
 class ShouldCreateUserFirstException implements Exception{}
 
 class CouldNotUpdateBalance implements Exception{}
+
+class CouldNotUpdateTemplate implements Exception{}
+
+class CouldNotDeleteTemplate implements Exception{}

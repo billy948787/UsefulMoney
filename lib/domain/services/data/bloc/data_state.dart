@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:usefulmoney/domain/services/data/type/database_book.dart';
+import 'package:usefulmoney/domain/services/data/type/database_template.dart';
 import 'package:usefulmoney/domain/services/data/type/database_user.dart';
 
 @immutable
@@ -66,4 +67,33 @@ class DataStateDatabaseClosed extends DataState {
 
   @override
   List<Object?> get props => [];
+}
+
+class DataStateAddedOrUpdatedNewTemplate extends DataState {
+  const DataStateAddedOrUpdatedNewTemplate(
+      {required super.exception, required this.needPushOrPop, this.template});
+
+  final bool needPushOrPop;
+  final DatabaseTemplate? template;
+
+  @override
+  List<Object?> get props => [needPushOrPop];
+}
+
+class DataStateDeleteTemplate extends DataState {
+  const DataStateDeleteTemplate({required super.exception});
+
+  @override
+  List<Object?> get props => [];
+}
+
+class DataStateChooseTemplateAction extends DataState {
+  final bool hasChoosed;
+  final int id;
+
+  const DataStateChooseTemplateAction(
+      {required super.exception, required this.hasChoosed, required this.id});
+
+  @override
+  List<Object?> get props => [hasChoosed, id];
 }

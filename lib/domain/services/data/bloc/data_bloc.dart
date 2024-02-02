@@ -4,8 +4,8 @@ import 'package:usefulmoney/domain/services/data/account_service.dart';
 import 'package:usefulmoney/domain/services/data/bloc/data_event.dart';
 import 'package:usefulmoney/domain/services/data/bloc/data_state.dart';
 import 'dart:developer' as devtool show log;
-
 import 'package:usefulmoney/domain/services/data/type/database_book.dart';
+import 'package:usefulmoney/utils/enums/template_actions.dart';
 
 class DataBloc extends Bloc<DataEvent, DataState> {
   DataBloc(String email) : super(const DataStateInit(exception: null)) {
@@ -140,7 +140,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
         emit(state);
       },
     );
-
+    //刪除一整列表的帳
     on<DataEventDeleteListAccount>(
       (event, emit) async {
         final id = event.id;
@@ -166,6 +166,105 @@ class DataBloc extends Bloc<DataEvent, DataState> {
           for (final element in deleteList) {
             await accountService.deleteAccount(id: element.id);
           }
+        }
+      },
+    );
+    on<DataEventCreateOrUpdateTemplate>(
+      (event, emit) async {
+        final name = event.name;
+        final needPushOrPop = event.needPushOrPop;
+        final user = await accountService.getUserOrCreateUser(email: email);
+        final id = event.id;
+        //go to update
+        if (needPushOrPop && id != null) {
+          final template = await accountService.getTemplate(id: id);
+          emit(DataStateAddedOrUpdatedNewTemplate(
+            exception: null,
+            needPushOrPop: needPushOrPop,
+            template: template,
+          ));
+          return;
+        }
+        //go to create
+        if (needPushOrPop) {
+          emit(DataStateAddedOrUpdatedNewTemplate(
+            exception: null,
+            needPushOrPop: needPushOrPop,
+          ));
+          return;
+        }
+        //actually update
+        if (name != null && id != null) {
+          try {
+            await accountService.updateTemplate(name: name, id: id);
+            emit(
+              const DataStateAddedOrUpdatedNewTemplate(
+                  exception: null, needPushOrPop: false),
+            );
+            return;
+          } on Exception catch (e) {
+            emit(DataStateAddedOrUpdatedNewTemplate(
+                exception: e, needPushOrPop: false));
+            return;
+          }
+        }
+
+        //actually create
+        if (name != null) {
+          try {
+            await accountService.createTemplate(
+              name: name,
+              userId: user.id,
+            );
+            emit(
+              DataStateAddedOrUpdatedNewTemplate(
+                  exception: null, needPushOrPop: needPushOrPop),
+            );
+            return;
+          } on Exception catch (e) {
+            emit(
+              DataStateAddedOrUpdatedNewTemplate(
+                  exception: e, needPushOrPop: needPushOrPop),
+            );
+            return;
+          }
+        }
+      },
+    );
+    //刪除模板
+    on<DataEventDeleteTemplate>(
+      (event, emit) async {
+        final id = event.id;
+        try {
+          await accountService.deleteTemplate(id: id);
+          emit(const DataStateDeleteTemplate(exception: null));
+        } on Exception catch (e) {
+          emit(DataStateDeleteTemplate(exception: e));
+        }
+      },
+    );
+
+    on<DataEventChooseTemplateAction>(
+      (event, emit) {
+        final action = event.action;
+        final id = event.id;
+        //user just want go to the action dialog
+        if (action == null) {
+          emit(DataStateChooseTemplateAction(
+              id: id, exception: null, hasChoosed: false));
+          return;
+        }
+
+        switch (action) {
+          case TemplateActions.delete:
+            add(DataEventDeleteTemplate(id: id));
+            break;
+          case TemplateActions.modify:
+            //send the user to the add update template dialog
+            add(DataEventCreateOrUpdateTemplate(needPushOrPop: true, id: id));
+            break;
+          case TemplateActions.none:
+            add(const DataEventNewOrUpdateAccount(needGoBack: false));
         }
       },
     );

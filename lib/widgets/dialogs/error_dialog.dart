@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:usefulmoney/utils/dialogs/generic_dialog.dart';
+import 'package:usefulmoney/widgets/dialogs/generic_dialog.dart';
 
 Future<void> showErrorDialog({
   required String title,

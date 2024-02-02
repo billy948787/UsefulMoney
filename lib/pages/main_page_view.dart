@@ -4,7 +4,7 @@ import 'package:usefulmoney/domain/services/data/bloc/data_bloc.dart';
 import 'package:usefulmoney/domain/services/data/bloc/data_state.dart';
 import 'dart:developer' as devtool show log;
 import 'package:usefulmoney/pages/balance/balance_view.dart';
-import 'package:usefulmoney/utils/dialogs/error_dialog.dart';
+import 'package:usefulmoney/widgets/dialogs/error_dialog.dart';
 import 'package:usefulmoney/pages/account/book_view.dart';
 
 class MainPageView extends StatefulWidget {
