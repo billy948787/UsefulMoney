@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:usefulmoney/domain/services/data/type/database_book.dart';
+import 'package:usefulmoney/domain/services/data/type/database_template.dart';
+import 'package:usefulmoney/utils/enums/template_actions.dart';
 
 @immutable
 abstract class DataEvent {
@@ -53,4 +55,24 @@ class DataEventDeleteListAccount extends DataEvent {
 
   const DataEventDeleteListAccount(
       {this.id, this.needAddtoListOrRemove, this.wantDelete, this.accounts});
+}
+
+class DataEventCreateOrUpdateTemplate extends DataEvent {
+  final String? name;
+  final bool needPushOrPop;
+  final int? id;
+  const DataEventCreateOrUpdateTemplate(
+      {this.name, required this.needPushOrPop, this.id});
+}
+
+class DataEventDeleteTemplate extends DataEvent {
+  final int id;
+  const DataEventDeleteTemplate({required this.id});
+}
+
+class DataEventChooseTemplateAction extends DataEvent {
+  final TemplateActions? action;
+  final int id;
+
+  const DataEventChooseTemplateAction({required this.action, required this.id});
 }

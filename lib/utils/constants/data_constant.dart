@@ -6,8 +6,12 @@ const bookAccountColumn = 'account';
 const bookValueColumn = 'value';
 const bookUserIdColumn = 'user_id';
 const bookIdColumn = 'id';
+const templateIdColumn = 'id';
+const templateNameColumn = 'name';
+const templateUserIdColumn = 'user_id';
 const userTable = 'user';
 const bookTable = 'book';
+const templateTable = 'template';
 const createUserTable = '''CREATE TABLE IF NOT EXISTS "user" (
 	"id"	INTEGER NOT NULL,
 	"account_balance"	INTEGER NOT NULL,
@@ -24,4 +28,11 @@ const createBookTable = '''CREATE TABLE IF NOT EXISTS "book" (
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
 ''';
+const createTemplateTable = '''CREATE TABLE IF NOT EXISTS "template" (
+	"id"	INTEGER NOT NULL,
+	"name"	TEXT NOT NULL,
+	"user_id"	INTEGER NOT NULL,
+	PRIMARY KEY("id" AUTOINCREMENT),
+	FOREIGN KEY("user_id") REFERENCES "user"("id")
+);''';
 const defaultEmail = 'default@email';
