@@ -12,4 +12,15 @@ class DatabaseTemplate {
       : id = map[templateIdColumn] as int,
         name = map[templateNameColumn] as String,
         userId = map[templateUserIdColumn] as int;
+
+  @override
+  String toString() {
+    return 'id : $id, name : $name, userId : $userId';
+  }
+
+  @override
+  bool operator ==(covariant DatabaseTemplate other) => other.id == id;
+
+  @override
+  int get hashCode => id.hashCode;
 }

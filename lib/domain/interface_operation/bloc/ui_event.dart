@@ -17,3 +17,4 @@ class UiEventSelectAllAccountsToDelete extends UiEvent {
 class UiEventDeselectAllAccount extends UiEvent {
   const UiEventDeselectAllAccount();
 }
+

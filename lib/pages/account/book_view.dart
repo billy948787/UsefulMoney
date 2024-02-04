@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:usefulmoney/domain/template_selection/template_selection_cubit.dart';
 import 'package:usefulmoney/routes/route.dart';
 import 'package:usefulmoney/domain/interface_operation/bloc/ui_bloc.dart';
 import 'package:usefulmoney/domain/interface_operation/bloc/ui_event.dart';
@@ -9,7 +10,6 @@ import 'package:usefulmoney/domain/services/data/account_service.dart';
 import 'package:usefulmoney/domain/services/data/bloc/data_bloc.dart';
 import 'package:usefulmoney/domain/services/data/bloc/data_event.dart';
 import 'package:usefulmoney/domain/services/data/bloc/data_state.dart';
-import 'dart:developer' as devtool show log;
 
 import 'package:usefulmoney/pages/account/account_list_view.dart';
 import 'package:usefulmoney/widgets/dialogs/delete_dialog.dart';
@@ -138,6 +138,13 @@ class _BookViewState extends State<BookView> {
                     },
                     onTap: (account) {
                       context
+                          .read<TemplateSelectionCubit>()
+                          .selectFromAccount(account.accountName);
+                      context.read<CounterCubit>().clear();
+                      context
+                          .read<CounterCubit>()
+                          .add(account.value.toString());
+                      context
                           .read<DataBloc>()
                           .add(DataEventNewOrUpdateAccount(account: account));
                     },
@@ -162,8 +169,6 @@ class _BookViewState extends State<BookView> {
               padding: const EdgeInsets.all(16.0),
               child: FloatingActionButton(
                 onPressed: () {
-                  final state = context.read<DataBloc>().state;
-                  devtool.log(state.toString());
                   context.read<CounterCubit>().clear();
                   context
                       .read<DataBloc>()

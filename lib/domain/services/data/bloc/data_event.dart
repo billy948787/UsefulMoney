@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:usefulmoney/domain/services/data/type/database_book.dart';
-import 'package:usefulmoney/domain/services/data/type/database_template.dart';
 import 'package:usefulmoney/utils/enums/template_actions.dart';
 
 @immutable
