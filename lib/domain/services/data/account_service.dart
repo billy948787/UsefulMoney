@@ -405,6 +405,16 @@ class AccountService {
     await _ensureDatabaseIsOpen();
     final db = _getDatabaseOrThrow();
 
+    final trySearch = await db.query(
+      templateTable,
+      where: 'name = ?',
+      whereArgs: [name],
+    );
+
+    if (trySearch.first.isNotEmpty || trySearch.isNotEmpty) {
+      throw CanNotCreateSameTemplate();
+    }
+
     final id = await db.insert(templateTable, {
       templateNameColumn: name,
       templateUserIdColumn: userId,
