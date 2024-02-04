@@ -29,8 +29,8 @@ class AccountService {
   }
   factory AccountService() => _shared;
 
+  DatabaseUser? _user;
   Database? _db;
-  // ignore: unused_field
   List<DatabaseBook> _data = [];
   int _balance = 0;
   List<DatabaseTemplate> _templates = [];
@@ -42,14 +42,22 @@ class AccountService {
   Stream<int> get balance => _balanceController.stream;
   Stream<List<DatabaseTemplate>> get allTemplates => _templateController.stream;
 
+  DatabaseUser getCurrentUserOrThrow() {
+    if (_user != null) {
+      return _user!;
+    } else {
+      throw UserNotExistException();
+    }
+  }
+
   Future<DatabaseUser> getUserOrCreateUser({required String email}) async {
     try {
       final user = await getUser(email: email);
-
+      _user = user;
       return user;
     } on UserNotExistException {
       final user = await createUser(email: email);
-
+      _user = user;
       return user;
     } catch (e) {
       rethrow;

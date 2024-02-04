@@ -6,7 +6,6 @@ import 'package:usefulmoney/domain/interface_operation/bloc/ui_state.dart';
 import 'package:usefulmoney/domain/services/data/bloc/data_bloc.dart';
 import 'package:usefulmoney/domain/services/data/bloc/data_event.dart';
 import 'package:usefulmoney/domain/services/data/type/database_book.dart';
-import 'dart:developer' as devtool show log;
 
 import 'package:usefulmoney/widgets/dialogs/delete_dialog.dart';
 
