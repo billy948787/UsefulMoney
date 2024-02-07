@@ -18,7 +18,7 @@ class Numpad extends StatelessWidget {
               },
               child: const Text(
                 '7',
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: fontSize),
               ),
             )),
             Expanded(
@@ -28,7 +28,7 @@ class Numpad extends StatelessWidget {
               },
               child: const Text(
                 '8',
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: fontSize),
               ),
             )),
             Expanded(
@@ -38,7 +38,7 @@ class Numpad extends StatelessWidget {
               },
               child: const Text(
                 '9',
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: fontSize),
               ),
             )),
           ],
@@ -52,7 +52,7 @@ class Numpad extends StatelessWidget {
               },
               child: const Text(
                 '4',
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: fontSize),
               ),
             )),
             Expanded(
@@ -62,7 +62,7 @@ class Numpad extends StatelessWidget {
               },
               child: const Text(
                 '5',
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: fontSize),
               ),
             )),
             Expanded(
@@ -72,7 +72,7 @@ class Numpad extends StatelessWidget {
               },
               child: const Text(
                 '6',
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: fontSize),
               ),
             )),
           ],
@@ -86,7 +86,7 @@ class Numpad extends StatelessWidget {
               },
               child: const Text(
                 '1',
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: fontSize),
               ),
             )),
             Expanded(
@@ -96,7 +96,7 @@ class Numpad extends StatelessWidget {
               },
               child: const Text(
                 '2',
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: fontSize),
               ),
             )),
             Expanded(
@@ -106,7 +106,7 @@ class Numpad extends StatelessWidget {
               },
               child: const Text(
                 '3',
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: fontSize),
               ),
             )),
           ],
@@ -120,7 +120,7 @@ class Numpad extends StatelessWidget {
               },
               child: const Text(
                 '00',
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: fontSize),
               ),
             )),
             Expanded(
@@ -130,7 +130,7 @@ class Numpad extends StatelessWidget {
               },
               child: const Text(
                 '0',
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: fontSize),
               ),
             )),
             Expanded(
@@ -146,3 +146,5 @@ class Numpad extends StatelessWidget {
     );
   }
 }
+
+const fontSize = 30.0;

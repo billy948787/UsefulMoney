@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:path/path.dart';
 import 'package:usefulmoney/domain/services/data/account_service.dart';
 import 'package:usefulmoney/domain/services/data/bloc/data_event.dart';
 import 'package:usefulmoney/domain/services/data/bloc/data_state.dart';
@@ -52,7 +53,6 @@ class DataBloc extends Bloc<DataEvent, DataState> {
                   accountName: name,
                   value: -value,
                 );
-          devtool.log('updated');
           emit(const DataStateHome(exception: null));
           return;
         } on Exception catch (e) {

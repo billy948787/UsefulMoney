@@ -6,8 +6,9 @@ import 'package:usefulmoney/domain/services/data/bloc/data_event.dart';
 import 'package:usefulmoney/domain/services/data/type/database_template.dart';
 import 'package:usefulmoney/domain/template_selection/template_selection_cubit.dart';
 import 'package:usefulmoney/domain/template_selection/template_selection_state.dart';
-import 'package:usefulmoney/pages/widgets/template_grid.dart';
-import 'package:usefulmoney/pages/widgets/buttons/custom_text_botton.dart';
+import 'package:usefulmoney/widgets/template_grid.dart';
+import 'package:usefulmoney/widgets/buttons/custom_text_botton.dart';
+import 'dart:developer' as devtool show log;
 
 class Templates extends StatefulWidget {
   const Templates({super.key});

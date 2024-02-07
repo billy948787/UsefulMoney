@@ -8,7 +8,7 @@ import 'package:usefulmoney/domain/interface_operation/bloc/ui_bloc.dart';
 import 'package:usefulmoney/domain/services/counting/bloc/couter_cubit.dart';
 import 'package:usefulmoney/domain/services/data/bloc/data_bloc.dart';
 import 'package:usefulmoney/domain/services/data/bloc/data_event.dart';
-import 'package:usefulmoney/pages/account/add_account_view.dart';
+import 'package:usefulmoney/pages/add_account_view.dart';
 import 'package:usefulmoney/pages/main_page_view.dart';
 
 void main() {
