@@ -33,8 +33,9 @@ class _BalanceViewState extends State<BalanceView> {
           StreamBuilder(
             stream: _accountService.balance,
             builder: (context, snapshot) {
+              final value = snapshot.data;
               if (snapshot.hasData) {
-                return Text(snapshot.data.toString());
+                return Text(value.toString());
               } else {
                 return const CircularProgressIndicator();
               }

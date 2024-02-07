@@ -8,6 +8,9 @@ class CounterCubit extends Cubit<CounterState> {
     if ((value != '0' && value != '00') && state.value == '' ||
         state.value != '' && value != '') {
       final previousValue = state.value;
+      if (value.contains('-')) {
+        value = value.substring(1, value.length);
+      }
       emit(CounterState(value: previousValue + value));
     }
   }

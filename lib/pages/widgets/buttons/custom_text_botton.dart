@@ -29,6 +29,13 @@ class CustomTextButton extends StatelessWidget {
           onPressed: () {
             onPress();
           },
+          style: const ButtonStyle(
+            shape: MaterialStatePropertyAll(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(15)),
+              ),
+            ),
+          ),
           onLongPress: () => onHold(),
           child: Text(content),
         );

@@ -68,7 +68,7 @@ class AccountService {
     await _ensureDatabaseIsOpen();
 
     final accounts = await getAllAccount();
-    final user = await getUser(email: defaultEmail);
+    final user = await getUserOrCreateUser(email: defaultEmail);
 
     _balance = user.accountBalance;
     _balanceController.add(_balance);
@@ -114,10 +114,10 @@ class AccountService {
 
     final query = await db.query(bookTable, where: 'id = ?', whereArgs: [id]);
     final previousAccount = DatabaseBook.fromRow(query.first);
-    final value = previousAccount.value;
+    final preViousvalue = previousAccount.value;
     await updateUserBalance(
       userId: previousAccount.userId,
-      value: value,
+      value: value - preViousvalue,
     );
 
     final result = await db.update(
@@ -400,8 +400,11 @@ class AccountService {
     return DatabaseTemplate.fromRow(result.first);
   }
 
-  Future<DatabaseTemplate> createTemplate(
-      {required String name, required int userId}) async {
+  Future<DatabaseTemplate> createTemplate({
+    required String name,
+    required int userId,
+    required bool type,
+  }) async {
     await _ensureDatabaseIsOpen();
     final db = _getDatabaseOrThrow();
 
@@ -411,19 +414,21 @@ class AccountService {
       whereArgs: [name],
     );
 
-    if (trySearch.first.isNotEmpty || trySearch.isNotEmpty) {
+    if (trySearch.isNotEmpty) {
       throw CanNotCreateSameTemplate();
     }
 
     final id = await db.insert(templateTable, {
       templateNameColumn: name,
       templateUserIdColumn: userId,
+      templateTypeColumn: type ? 1 : 0,
     });
 
     final template = DatabaseTemplate(
       id: id,
       name: name,
       userId: userId,
+      type: type,
     );
 
     _templates.add(template);
@@ -478,5 +483,17 @@ class AccountService {
     } on MissingPlatformDirectoryException {
       throw UnableToGetDocumentDirectoryException();
     }
+  }
+
+  Future<void> deleteDatabase() async {
+    final docPath = await getApplicationCacheDirectory();
+    final dbPath = join(docPath.path, dbName);
+    return databaseFactory.deleteDatabase(dbPath);
+  }
+
+  Future<void> resetDatabase({required String email}) async {
+    await close();
+    await deleteDatabase();
+    await open();
   }
 }

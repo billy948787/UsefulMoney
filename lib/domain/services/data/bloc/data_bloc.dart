@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:usefulmoney/utils/constants/data_constant.dart';
 import 'package:usefulmoney/domain/services/data/account_service.dart';
 import 'package:usefulmoney/domain/services/data/bloc/data_event.dart';
 import 'package:usefulmoney/domain/services/data/bloc/data_state.dart';
@@ -34,15 +33,25 @@ class DataBloc extends Bloc<DataEvent, DataState> {
       final valueString = event.value;
       final needGoBack = event.needGoBack;
       final account = event.account;
+      final isPositive = event.isPositive;
       //user want update the account
-      if (account != null && name != null && valueString != null) {
+      if (account != null &&
+          name != null &&
+          valueString != null &&
+          isPositive != null) {
         try {
           final value = int.parse(valueString);
-          await accountService.updateAccount(
-            id: account.id,
-            accountName: name,
-            value: value,
-          );
+          isPositive
+              ? await accountService.updateAccount(
+                  id: account.id,
+                  accountName: name,
+                  value: value,
+                )
+              : await accountService.updateAccount(
+                  id: account.id,
+                  accountName: name,
+                  value: -value,
+                );
           devtool.log('updated');
           emit(const DataStateHome(exception: null));
           return;
@@ -56,16 +65,22 @@ class DataBloc extends Bloc<DataEvent, DataState> {
             exception: null, account: account));
         return;
       }
-      //user is creatint a account
-      if (name != null && valueString != null) {
+      //user is creating a account
+      if (name != null && valueString != null && isPositive != null) {
         try {
           final value = int.parse(valueString);
           final user = await accountService.getUserOrCreateUser(email: email);
-          accountService.createAccount(
-            name: name,
-            value: value,
-            owner: user,
-          );
+          isPositive
+              ? accountService.createAccount(
+                  name: name,
+                  value: value,
+                  owner: user,
+                )
+              : accountService.createAccount(
+                  name: name,
+                  value: -value,
+                  owner: user,
+                );
           emit(const DataStateHome(exception: null));
           return;
         } on Exception catch (e) {
@@ -133,11 +148,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
 
     on<DataEventResetUser>(
       (event, emit) async {
-        final user = await accountService.getUser(email: email);
-        accountService.deleteAllAccount(userId: user.id);
-        accountService.deleteUser(email: defaultEmail);
-        accountService.createUser(email: defaultEmail);
-        emit(state);
+        await accountService.resetDatabase(email: email);
       },
     );
     //刪除一整列表的帳
@@ -175,6 +186,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
         final needPushOrPop = event.needPushOrPop;
         final user = await accountService.getUserOrCreateUser(email: email);
         final id = event.id;
+        final type = event.type;
         //go to update
         if (needPushOrPop && id != null) {
           final template = await accountService.getTemplate(id: id);
@@ -210,11 +222,12 @@ class DataBloc extends Bloc<DataEvent, DataState> {
         }
 
         //actually create
-        if (name != null) {
+        if (name != null && type != null) {
           try {
             await accountService.createTemplate(
               name: name,
               userId: user.id,
+              type: type,
             );
             emit(
               DataStateAddedOrUpdatedNewTemplate(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:usefulmoney/domain/template_selection/template_selection_cubit.dart';
+import 'package:usefulmoney/theme/theme.dart';
 import 'package:usefulmoney/utils/constants/data_constant.dart';
 import 'package:usefulmoney/routes/route.dart';
 import 'package:usefulmoney/domain/interface_operation/bloc/ui_bloc.dart';
@@ -52,9 +53,9 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        useMaterial3: true,
-      ),
+      debugShowCheckedModeBanner: false,
+      darkTheme: darkMode,
+      theme: ThemeData(useMaterial3: true),
       title: 'UsefulMoney',
       localizationsDelegates: const [
         DefaultMaterialLocalizations.delegate,

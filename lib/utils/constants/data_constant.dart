@@ -9,6 +9,7 @@ const bookIdColumn = 'id';
 const templateIdColumn = 'id';
 const templateNameColumn = 'name';
 const templateUserIdColumn = 'user_id';
+const templateTypeColumn = 'type';
 const userTable = 'user';
 const bookTable = 'book';
 const templateTable = 'template';
@@ -32,6 +33,7 @@ const createTemplateTable = '''CREATE TABLE IF NOT EXISTS "template" (
 	"id"	INTEGER NOT NULL,
 	"name"	TEXT NOT NULL,
 	"user_id"	INTEGER NOT NULL,
+  "type"	INTEGER NOT NULL,
 	PRIMARY KEY("id" AUTOINCREMENT),
 	FOREIGN KEY("user_id") REFERENCES "user"("id")
 );''';

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:usefulmoney/domain/services/data/bloc/data_bloc.dart';
 import 'package:usefulmoney/domain/services/data/bloc/data_event.dart';
 import 'package:usefulmoney/domain/services/data/type/database_template.dart';
+import 'package:usefulmoney/domain/template_selection/template_selection_cubit.dart';
 
 class AddUpdateTemplateView extends StatefulWidget {
   const AddUpdateTemplateView({super.key, this.template});
@@ -32,6 +33,7 @@ class _AddUpdateTemplateViewState extends State<AddUpdateTemplateView> {
 
   @override
   Widget build(BuildContext context) {
+    final type = context.read<TemplateSelectionCubit>().state.type;
     return Dialog(
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(20))),
@@ -78,12 +80,14 @@ class _AddUpdateTemplateViewState extends State<AddUpdateTemplateView> {
                                     needPushOrPop: false,
                                     name: _controller.text,
                                     id: widget.template!.id,
+                                    type: type,
                                   ),
                                 )
                             : context.read<DataBloc>().add(
                                   DataEventCreateOrUpdateTemplate(
                                     needPushOrPop: false,
                                     name: _controller.text,
+                                    type: type,
                                   ),
                                 );
                         Navigator.of(context).pop();
