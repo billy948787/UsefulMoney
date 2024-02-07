@@ -11,8 +11,8 @@ import 'package:usefulmoney/domain/services/data/account_service.dart';
 import 'package:usefulmoney/domain/services/data/bloc/data_bloc.dart';
 import 'package:usefulmoney/domain/services/data/bloc/data_event.dart';
 import 'package:usefulmoney/domain/services/data/bloc/data_state.dart';
-import 'package:usefulmoney/pages/account/account_list_view.dart';
-import 'package:usefulmoney/pages/widgets/dialogs/delete_dialog.dart';
+import 'package:usefulmoney/widgets/account/account_list_widget.dart';
+import 'package:usefulmoney/widgets/dialogs/delete_dialog.dart';
 
 class BookView extends StatefulWidget {
   const BookView({super.key});
@@ -33,8 +33,16 @@ class _BookViewState extends State<BookView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          context.read<CounterCubit>().clear();
+          context.read<TemplateSelectionCubit>().changeType(false);
+          context.read<DataBloc>().add(const DataEventNewOrUpdateAccount());
+        },
+        shape: const CircleBorder(),
+        child: const Icon(Icons.add),
+      ),
       appBar: AppBar(
-        title: const Text('Books'),
         actions: [
           BlocBuilder<UiBloc, UiState>(
             builder: (context, state) {
@@ -120,6 +128,42 @@ class _BookViewState extends State<BookView> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8, 8, 8, 60),
+              child: Card(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: StreamBuilder(
+                        stream: _accountService.balance,
+                        builder: (context, snapshot) {
+                          final value = snapshot.data;
+                          if (snapshot.hasData) {
+                            return Text(
+                              value.toString(),
+                              style: const TextStyle(fontSize: cardFontSize),
+                            );
+                          } else {
+                            return const CircularProgressIndicator();
+                          }
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('left'),
+                          const Text('right'),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
             Expanded(
               child: StreamBuilder(
                 stream: _accountService.allAccounts,
@@ -166,25 +210,11 @@ class _BookViewState extends State<BookView> {
                 },
               ),
             ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: FloatingActionButton(
-                  onPressed: () {
-                    context.read<CounterCubit>().clear();
-                    context
-                        .read<DataBloc>()
-                        .add(const DataEventNewOrUpdateAccount());
-                  },
-                  shape: const CircleBorder(),
-                  child: const Icon(Icons.add),
-                ),
-              ),
-            )
           ],
         ),
       ),
     );
   }
 }
+
+const cardFontSize = 30.0;

@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:usefulmoney/domain/services/data/account_service.dart';
 import 'package:usefulmoney/domain/services/data/type/database_template.dart';
 import 'package:usefulmoney/domain/template_selection/template_selection_state.dart';
+import 'dart:developer' as devtool show log;
 
 class TemplateSelectionCubit extends Cubit<TemplateSelectionState> {
   TemplateSelectionCubit()
@@ -21,7 +22,15 @@ class TemplateSelectionCubit extends Cubit<TemplateSelectionState> {
     if (list.isEmpty) {
       return;
     }
-    if (state.isSelect.isEmpty || state.isSelect.length != list.length) {
+    bool isContained = false;
+    for (int i = 0; i < list.length; i++) {
+      if (isSelect.containsKey(list[i])) {
+        isContained = true;
+      }
+    }
+    if (state.isSelect.isEmpty ||
+        state.isSelect.length != list.length ||
+        !isContained) {
       for (int i = 0; i < list.length; i++) {
         if (existingTemplate != null) {
           if (list[i] == existingTemplate) {
@@ -39,7 +48,7 @@ class TemplateSelectionCubit extends Cubit<TemplateSelectionState> {
         }
       }
       emit(TemplateSelectionState(
-        isSelect: isSelect,
+        isSelect: Map.from(isSelect),
         selectedTemplate: existingTemplate ?? list[0],
         type: _type,
       ));
@@ -76,6 +85,7 @@ class TemplateSelectionCubit extends Cubit<TemplateSelectionState> {
         hasFound = true;
         existingTemplate = list[i];
         changeType(list[i].type);
+        return;
       }
     }
     if (!hasFound) {
@@ -91,7 +101,6 @@ class TemplateSelectionCubit extends Cubit<TemplateSelectionState> {
 
   void changeType(bool newType) {
     _type = newType;
-    clearSelect();
     emit(TemplateSelectionState(
         isSelect: isSelect, selectedTemplate: null, type: _type));
   }

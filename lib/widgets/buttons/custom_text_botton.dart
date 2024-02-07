@@ -24,7 +24,7 @@ class CustomTextButton extends StatelessWidget {
     if (template != null) {
       final isPressed =
           context.read<TemplateSelectionCubit>().state.isSelect[template];
-      if (isPressed!) {
+      if (isPressed != null && isPressed) {
         return FilledButton(
           onPressed: () {
             onPress();
@@ -37,10 +37,33 @@ class CustomTextButton extends StatelessWidget {
             ),
           ),
           onLongPress: () => onHold(),
-          child: Text(content),
+          child: Text(content, style: const TextStyle(fontSize: fontSize)),
         );
       } else {
-        return OutlinedButton(
+        return ButtonTheme(
+          height: 20,
+          minWidth: 100,
+          child: OutlinedButton(
+            onPressed: () {
+              onPress();
+            },
+            onLongPress: () => onHold(),
+            style: const ButtonStyle(
+              shape: MaterialStatePropertyAll(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(15)),
+                ),
+              ),
+            ),
+            child: Text(content, style: const TextStyle(fontSize: fontSize)),
+          ),
+        );
+      }
+    } else {
+      return ButtonTheme(
+        height: 50,
+        minWidth: 20,
+        child: OutlinedButton(
           onPressed: () {
             onPress();
           },
@@ -52,24 +75,11 @@ class CustomTextButton extends StatelessWidget {
               ),
             ),
           ),
-          child: Text(content),
-        );
-      }
-    } else {
-      return OutlinedButton(
-        onPressed: () {
-          onPress();
-        },
-        onLongPress: () => onHold(),
-        style: const ButtonStyle(
-          shape: MaterialStatePropertyAll(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(15)),
-            ),
-          ),
+          child: Text(content, style: const TextStyle(fontSize: fontSize)),
         ),
-        child: Text(content),
       );
     }
   }
 }
+
+const fontSize = 18.0;

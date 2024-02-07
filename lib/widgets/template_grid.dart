@@ -11,11 +11,15 @@ class TemplateGridView extends StatefulWidget {
 class _TemplateGridViewState extends State<TemplateGridView> {
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
-      crossAxisCount: 4,
-      mainAxisSpacing: 20.0,
-      crossAxisSpacing: 20.0,
-      children: widget.templates,
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: GridView.count(
+        crossAxisCount: 3,
+        mainAxisSpacing: 20.0,
+        crossAxisSpacing: 20.0,
+        childAspectRatio: 1,
+        children: widget.templates,
+      ),
     );
   }
 }

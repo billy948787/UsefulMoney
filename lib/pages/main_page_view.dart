@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:usefulmoney/domain/services/data/bloc/data_bloc.dart';
 import 'package:usefulmoney/domain/services/data/bloc/data_state.dart';
-import 'package:usefulmoney/pages/balance/balance_view.dart';
-import 'package:usefulmoney/pages/widgets/dialogs/error_dialog.dart';
-import 'package:usefulmoney/pages/account/book_view.dart';
+import 'package:usefulmoney/pages/setting_view.dart';
+import 'package:usefulmoney/widgets/dialogs/error_dialog.dart';
+import 'package:usefulmoney/pages/book_view.dart';
 
 class MainPageView extends StatefulWidget {
   const MainPageView({super.key});
@@ -32,7 +32,7 @@ class _MainPageViewState extends State<MainPageView> {
         bottomNavigationBar: NavigationBar(
             destinations: const [
               NavigationDestination(icon: Icon(Icons.home), label: ''),
-              NavigationDestination(icon: Icon(Icons.wifi), label: ''),
+              NavigationDestination(icon: Icon(Icons.settings), label: ''),
             ],
             onDestinationSelected: (value) {
               setState(() {
@@ -42,7 +42,7 @@ class _MainPageViewState extends State<MainPageView> {
             selectedIndex: _currentIndex),
         body: [
           const BookView(),
-          const BalanceView(),
+          const SettingView(),
         ][_currentIndex],
       ),
     );
