@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:usefulmoney/domain/services/data/bloc/data_bloc.dart';
 import 'package:usefulmoney/domain/services/data/bloc/data_state.dart';
 import 'package:usefulmoney/pages/balance/balance_view.dart';
-import 'package:usefulmoney/widgets/dialogs/error_dialog.dart';
+import 'package:usefulmoney/pages/widgets/dialogs/error_dialog.dart';
 import 'package:usefulmoney/pages/account/book_view.dart';
 
 class MainPageView extends StatefulWidget {
@@ -22,7 +22,7 @@ class _MainPageViewState extends State<MainPageView> {
       listener: (context, state) async {
         if (state.exception != null) {
           await showErrorDialog(
-            title: 'Error',
+            title: 'Error $state',
             content: state.exception.toString(),
             context: context,
           );

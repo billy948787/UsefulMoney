@@ -13,6 +13,7 @@ class DataEventNewOrUpdateAccount extends DataEvent {
   final String? value;
   final bool needGoBack;
   final DatabaseBook? account;
+  final bool? isPositive;
 
   const DataEventNewOrUpdateAccount({
     this.isAdded = false,
@@ -20,6 +21,7 @@ class DataEventNewOrUpdateAccount extends DataEvent {
     this.value,
     this.needGoBack = false,
     this.account,
+    this.isPositive,
   });
 }
 
@@ -60,8 +62,9 @@ class DataEventCreateOrUpdateTemplate extends DataEvent {
   final String? name;
   final bool needPushOrPop;
   final int? id;
+  final bool? type;
   const DataEventCreateOrUpdateTemplate(
-      {this.name, required this.needPushOrPop, this.id});
+      {this.name, required this.needPushOrPop, this.id, this.type});
 }
 
 class DataEventDeleteTemplate extends DataEvent {

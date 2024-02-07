@@ -12,7 +12,6 @@ class _TemplateGridViewState extends State<TemplateGridView> {
   @override
   Widget build(BuildContext context) {
     return GridView.count(
-      
       crossAxisCount: 4,
       mainAxisSpacing: 20.0,
       crossAxisSpacing: 20.0,

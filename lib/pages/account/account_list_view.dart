@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:usefulmoney/domain/interface_operation/bloc/ui_bloc.dart';
 import 'package:usefulmoney/domain/interface_operation/bloc/ui_event.dart';
 import 'package:usefulmoney/domain/interface_operation/bloc/ui_state.dart';
 import 'package:usefulmoney/domain/services/data/bloc/data_bloc.dart';
 import 'package:usefulmoney/domain/services/data/bloc/data_event.dart';
 import 'package:usefulmoney/domain/services/data/type/database_book.dart';
-
-import 'package:usefulmoney/widgets/dialogs/delete_dialog.dart';
 
 typedef DeleteCallBack = void Function(DatabaseBook);
 typedef OnTapCallBack = void Function(DatabaseBook);
@@ -61,25 +60,35 @@ class _AccountListViewState extends State<AccountListView> {
           return ListView.builder(
             itemCount: widget.accounts.length,
             itemBuilder: (context, index) {
-              return Dismissible(
-                key: Key(widget.accounts[index].accountName),
-                onDismissed: (direction) =>
-                    widget.deleteInstantly(widget.accounts[index]),
-                direction: DismissDirection.endToStart,
-                background: Container(
-                  decoration: const BoxDecoration(color: Colors.red),
-                  alignment: Alignment.centerRight,
-                  child: const Icon(Icons.delete, color: Colors.black),
-                ),
-                confirmDismiss: (direction) {
-                  return showDeleteDialog(context);
-                },
-                child: ListTile(
-                  title: Text(
-                    widget.accounts[index].accountName,
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Slidable(
+                  endActionPane: ActionPane(
+                    motion: const StretchMotion(),
+                    children: [
+                      SlidableAction(
+                        onPressed: (context) =>
+                            widget.onDelete(widget.accounts[index]),
+                        icon: Icons.delete,
+                        backgroundColor: Colors.red,
+                      )
+                    ],
                   ),
-                  subtitle: Text(widget.accounts[index].value.toString()),
-                  onTap: () => widget.onTap(widget.accounts[index]),
+                  child: Card(
+                    child: ListTile(
+                      leading: const Icon(Icons.attach_money),
+                      title: Text(
+                        widget.accounts[index].accountName,
+                      ),
+                      trailing: Text(widget.accounts[index].value.toString(),
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: widget.accounts[index].value > 0
+                                  ? Colors.green
+                                  : Colors.red)),
+                      onTap: () => widget.onTap(widget.accounts[index]),
+                    ),
+                  ),
                 ),
               );
             },
@@ -88,20 +97,21 @@ class _AccountListViewState extends State<AccountListView> {
           return ListView.builder(
             itemCount: widget.accounts.length,
             itemBuilder: (context, index) {
-              return CheckboxListTile.adaptive(
-                value: widget.isSelected[index],
-                onChanged: (value) {
-                  setState(() {
-                    widget.isSelected[index] = value!;
-                    context.read<DataBloc>().add(DataEventDeleteListAccount(
-                        id: widget.accounts[index].id,
-                        needAddtoListOrRemove: value));
-                  });
-                },
-                title: Text(
-                  widget.accounts[index].accountName,
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Card(
+                  child: CheckboxListTile.adaptive(
+                    value: widget.isSelected[index],
+                    onChanged: (value) {
+                      setState(() {});
+                    },
+                    title: Text(
+                      widget.accounts[index].accountName,
+                    ),
+                    secondary: const Icon(Icons.attach_money),
+                    subtitle: Text(widget.accounts[index].value.toString()),
+                  ),
                 ),
-                subtitle: Text(widget.accounts[index].value.toString()),
               );
             },
           );

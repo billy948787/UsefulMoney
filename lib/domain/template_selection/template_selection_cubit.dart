@@ -5,15 +5,22 @@ import 'package:usefulmoney/domain/template_selection/template_selection_state.d
 
 class TemplateSelectionCubit extends Cubit<TemplateSelectionState> {
   TemplateSelectionCubit()
-      : super(
-            const TemplateSelectionState(isSelect: {}, selectedTemplate: null));
+      : super(const TemplateSelectionState(
+          isSelect: {},
+          selectedTemplate: null,
+          type: false,
+        ));
   List<DatabaseTemplate> _list = [];
   Map<DatabaseTemplate, bool> isSelect = {};
+  bool _type = false;
   DatabaseTemplate? existingTemplate;
   final AccountService accountService = AccountService();
 
   void init(List<DatabaseTemplate> list) async {
     _list = list;
+    if (list.isEmpty) {
+      return;
+    }
     if (state.isSelect.isEmpty || state.isSelect.length != list.length) {
       for (int i = 0; i < list.length; i++) {
         if (existingTemplate != null) {
@@ -32,39 +39,61 @@ class TemplateSelectionCubit extends Cubit<TemplateSelectionState> {
         }
       }
       emit(TemplateSelectionState(
-          isSelect: isSelect, selectedTemplate: existingTemplate ?? list[0]));
+        isSelect: isSelect,
+        selectedTemplate: existingTemplate ?? list[0],
+        type: _type,
+      ));
     }
   }
 
-  void select(DatabaseTemplate template) {
+  void select(DatabaseTemplate template, bool type) {
     isSelect.clear();
     final list = _list;
+    _type = type;
     for (int i = 0; i < list.length; i++) {
       list[i] == template
           ? isSelect.addAll({list[i]: true})
           : isSelect.addAll({list[i]: false});
     }
-    emit(
-        TemplateSelectionState(isSelect: isSelect, selectedTemplate: template));
+    emit(TemplateSelectionState(
+      isSelect: isSelect,
+      selectedTemplate: template,
+      type: type,
+    ));
   }
 
-  void selectFromAccount(String name) async {
+  void selectFromAccount(String name, int value) async {
     final user = accountService.getCurrentUserOrThrow();
 
     final list = await accountService.getAllTemplate(userId: user.id);
+    if (list.isEmpty) {
+      return;
+    }
     bool hasFound = false;
 
     for (int i = 0; i < list.length; i++) {
       if (list[i].name == name) {
         hasFound = true;
         existingTemplate = list[i];
+        changeType(list[i].type);
       }
     }
     if (!hasFound) {
-      final template =
-          await accountService.createTemplate(name: name, userId: user.id);
+      final template = await accountService.createTemplate(
+        name: name,
+        userId: user.id,
+        type: value > 0 ? true : false,
+      );
+      changeType(value > 0 ? true : false);
       existingTemplate = template;
     }
+  }
+
+  void changeType(bool newType) {
+    _type = newType;
+    clearSelect();
+    emit(TemplateSelectionState(
+        isSelect: isSelect, selectedTemplate: null, type: _type));
   }
 
   void clearSelect() {
