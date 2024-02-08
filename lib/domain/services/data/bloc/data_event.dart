@@ -44,8 +44,8 @@ class DataEventCloseDatabase extends DataEvent {
   const DataEventCloseDatabase();
 }
 
-class DataEventResetUser extends DataEvent {
-  const DataEventResetUser();
+class DataEventResetDatabase extends DataEvent {
+  const DataEventResetDatabase();
 }
 
 class DataEventDeleteListAccount extends DataEvent {

@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 
+typedef OnClick = void Function();
+
 class CustomBotton extends StatelessWidget {
-  const CustomBotton({super.key});
+  const CustomBotton({
+    super.key,
+    required this.onClick,
+  });
+
+  final OnClick onClick;
 
   @override
   Widget build(BuildContext context) {
     return OutlinedButton(
-      onPressed: () {},
+      onPressed: onClick,
       style: const ButtonStyle(
         shape: MaterialStatePropertyAll(
           RoundedRectangleBorder(
@@ -17,7 +24,10 @@ class CustomBotton extends StatelessWidget {
       child: const Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.replay_sharp),
+          Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Icon(Icons.replay_sharp),
+          ),
           Text(
             '重置資料(無法復原)',
             textAlign: TextAlign.center,
