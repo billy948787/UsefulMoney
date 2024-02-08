@@ -146,7 +146,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
       },
     );
 
-    on<DataEventResetUser>(
+    on<DataEventResetDatabase>(
       (event, emit) async {
         await accountService.resetDatabase(email: email);
       },

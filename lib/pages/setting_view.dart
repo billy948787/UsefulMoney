@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:usefulmoney/domain/services/data/bloc/data_bloc.dart';
+import 'package:usefulmoney/domain/services/data/bloc/data_event.dart';
 import 'package:usefulmoney/widgets/buttons/custom_botton.dart';
 
 class SettingView extends StatelessWidget {
@@ -14,7 +17,11 @@ class SettingView extends StatelessWidget {
           crossAxisCount: 3,
           crossAxisSpacing: 20,
           children: [
-            CustomBotton(),
+            CustomBotton(
+              onClick: () {
+                context.read<DataBloc>().add(const DataEventResetDatabase());
+              },
+            ),
           ],
         ),
       ),
