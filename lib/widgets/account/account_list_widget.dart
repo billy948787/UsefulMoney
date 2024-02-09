@@ -114,7 +114,11 @@ class _AccountListViewState extends State<AccountListView> {
                       widget.accounts[index].accountName,
                     ),
                     secondary: const Icon(Icons.attach_money),
-                    subtitle: Text(widget.accounts[index].value.toString()),
+                    subtitle: Text(widget.accounts[index].value.toString(),
+                        style: TextStyle(
+                            color: widget.accounts[index].value > 0
+                                ? Colors.green
+                                : Colors.red)),
                   ),
                 ),
               );

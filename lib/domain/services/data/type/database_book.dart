@@ -19,6 +19,11 @@ class DatabaseBook {
         accountName = map[bookAccountColumn] as String;
 
   @override
+  String toString() {
+    return 'id : $id , name : $accountName , value : $value';
+  }
+
+  @override
   bool operator ==(covariant DatabaseBook other) => other.id == id;
 
   @override

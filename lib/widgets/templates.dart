@@ -33,7 +33,6 @@ class _TemplatesState extends State<Templates> {
         stream: _accountService.allTemplates,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            devtool.log('in the stream builder ${snapshot.data.toString()}');
             final allList = snapshot.data as List<DatabaseTemplate>;
             return BlocBuilder<TemplateSelectionCubit, TemplateSelectionState>(
               buildWhen: (previous, current) => previous.type != current.type,
