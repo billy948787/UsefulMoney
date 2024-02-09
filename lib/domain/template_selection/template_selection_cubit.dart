@@ -19,7 +19,6 @@ class TemplateSelectionCubit extends Cubit<TemplateSelectionState> {
 
   void init(List<DatabaseTemplate> list) async {
     _list = list;
-    devtool.log('send in list : ${_list.toList()}');
     if (list.isEmpty) {
       return;
     }
@@ -29,12 +28,10 @@ class TemplateSelectionCubit extends Cubit<TemplateSelectionState> {
         isContained = true;
       }
     }
-    devtool.log(state.isSelect.toString());
-    devtool.log(state.selectedTemplate.toString());
+
     if (state.isSelect.isEmpty ||
         state.isSelect.length != list.length ||
         !isContained) {
-      devtool.log('in the if');
       for (int i = 0; i < list.length; i++) {
         if (existingTemplate != null) {
           if (list[i] == existingTemplate) {
@@ -51,8 +48,6 @@ class TemplateSelectionCubit extends Cubit<TemplateSelectionState> {
           }
         }
       }
-      // devtool.log(existingTemplate.toString());
-      // devtool.log(list[0].toString());
       emit(TemplateSelectionState(
         isSelect: Map.from(isSelect),
         selectedTemplate: existingTemplate ?? list[0],

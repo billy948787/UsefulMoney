@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:path/path.dart';
 import 'package:usefulmoney/domain/services/data/account_service.dart';
 import 'package:usefulmoney/domain/services/data/bloc/data_event.dart';
 import 'package:usefulmoney/domain/services/data/bloc/data_state.dart';
@@ -177,7 +176,9 @@ class DataBloc extends Bloc<DataEvent, DataState> {
           for (final element in deleteList) {
             await accountService.deleteAccount(id: element.id);
           }
+          deleteList.clear();
         }
+        emit(state);
       },
     );
     on<DataEventCreateOrUpdateTemplate>(
