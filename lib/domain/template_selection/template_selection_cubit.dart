@@ -121,6 +121,6 @@ class TemplateSelectionCubit extends Cubit<TemplateSelectionState> {
     emit(TemplateSelectionState(
         isSelect: isSelect,
         selectedTemplate: existingTemplate ?? _list[0],
-        type: _type));
+        type: _type))
   }
 }
