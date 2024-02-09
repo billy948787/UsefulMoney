@@ -27,19 +27,16 @@ class _TemplatesState extends State<Templates> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: StreamBuilder(
+      child: StreamBuilder<List<DatabaseTemplate>>(
         stream: _accountService.allTemplates,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
+            devtool.log('in the stream builder ${snapshot.data.toString()}');
             final allList = snapshot.data as List<DatabaseTemplate>;
             return BlocBuilder<TemplateSelectionCubit, TemplateSelectionState>(
+              buildWhen: (previous, current) => previous.type != current.type,
               builder: (context, state) {
                 final type = state.type;
                 final list = List<DatabaseTemplate>.from(allList);

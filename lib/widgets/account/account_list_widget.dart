@@ -100,10 +100,15 @@ class _AccountListViewState extends State<AccountListView> {
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Card(
-                  child: CheckboxListTile.adaptive(
+                  child: CheckboxListTile(
                     value: widget.isSelected[index],
                     onChanged: (value) {
-                      setState(() {});
+                      setState(() {
+                        widget.isSelected[index] = value!;
+                        context.read<DataBloc>().add(DataEventDeleteListAccount(
+                            id: widget.accounts[index].id,
+                            needAddtoListOrRemove: value));
+                      });
                     },
                     title: Text(
                       widget.accounts[index].accountName,

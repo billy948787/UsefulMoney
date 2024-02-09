@@ -113,6 +113,8 @@ class _AddAccountViewState extends State<AddAccountView> {
                     icon: const Icon(Icons.clear),
                     onPressed: () {
                       context.read<TemplateSelectionCubit>().clearSelect();
+                      devtool.log(
+                          'sent ${context.read<TemplateSelectionCubit>().state.isSelect.toString()}');
                       context
                           .read<DataBloc>()
                           .add(const DataEventNewOrUpdateAccount(
@@ -151,15 +153,21 @@ class _AddAccountViewState extends State<AddAccountView> {
                     ),
                     Expanded(
                       child: IconButton(
-                        icon: const Icon(Icons.save),
+                        icon: const Icon(Icons.add),
                         onPressed: () {
                           final value =
                               context.read<CounterCubit>().state.value;
+                          devtool.log(context
+                              .read<TemplateSelectionCubit>()
+                              .state
+                              .selectedTemplate
+                              .toString());
                           final name = context
                               .read<TemplateSelectionCubit>()
                               .state
                               .selectedTemplate!
                               .name;
+                          devtool.log(name);
                           isActive
                               ? context
                                   .read<DataBloc>()
