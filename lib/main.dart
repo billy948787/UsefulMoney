@@ -1,3 +1,4 @@
+import 'package:feedback/feedback.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:usefulmoney/domain/template_selection/template_selection_cubit.dart';
@@ -13,7 +14,7 @@ import 'package:usefulmoney/pages/main_page_view.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const App());
+  runApp(const BetterFeedback(child: App()));
 }
 
 class App extends StatefulWidget {
@@ -55,7 +56,9 @@ class _AppState extends State<App> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       darkTheme: darkMode,
-      theme: ThemeData(useMaterial3: true),
+      theme: ThemeData(
+        useMaterial3: true,
+      ),
       title: 'UsefulMoney',
       localizationsDelegates: const [
         DefaultMaterialLocalizations.delegate,
