@@ -6,9 +6,13 @@ class CustomBotton extends StatelessWidget {
   const CustomBotton({
     super.key,
     required this.onClick,
+    required this.content,
+    required this.icon,
   });
 
   final OnClick onClick;
+  final Icon icon;
+  final String content;
 
   @override
   Widget build(BuildContext context) {
@@ -21,15 +25,15 @@ class CustomBotton extends StatelessWidget {
           ),
         ),
       ),
-      child: const Column(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Icon(Icons.replay_sharp),
+            padding: const EdgeInsets.all(8.0),
+            child: icon,
           ),
           Text(
-            '重置資料(無法復原)',
+            content,
             textAlign: TextAlign.center,
           ),
         ],
