@@ -21,7 +21,7 @@ class SendBugButton extends StatelessWidget {
           },
         );
       },
-      content: '有錯誤？ 按這來傳送給我！',
+      content: '回報錯誤或建議',
       icon: const Icon(Icons.bug_report),
     );
   }
