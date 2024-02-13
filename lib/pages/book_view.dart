@@ -12,7 +12,7 @@ import 'package:usefulmoney/domain/services/data/bloc/data_bloc.dart';
 import 'package:usefulmoney/domain/services/data/bloc/data_event.dart';
 import 'package:usefulmoney/domain/services/data/bloc/data_state.dart';
 import 'package:usefulmoney/widgets/account/account_list_widget.dart';
-import 'package:usefulmoney/widgets/dialogs/delete_dialog.dart';
+import 'package:usefulmoney/utils/dialogs/delete_dialog.dart';
 
 class BookView extends StatefulWidget {
   const BookView({super.key});
@@ -133,30 +133,37 @@ class _BookViewState extends State<BookView> {
               child: Card(
                 child: Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: StreamBuilder(
-                        stream: _accountService.balance,
-                        builder: (context, snapshot) {
-                          final value = snapshot.data;
-                          if (snapshot.hasData) {
-                            return Text(
-                              value.toString(),
-                              style: const TextStyle(fontSize: cardFontSize),
-                            );
-                          } else {
-                            return const CircularProgressIndicator();
-                          }
-                        },
-                      ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: StreamBuilder(
+                            stream: _accountService.balance,
+                            builder: (context, snapshot) {
+                              final value = snapshot.data;
+                              if (snapshot.hasData) {
+                                return Text(
+                                  value.toString(),
+                                  style:
+                                      const TextStyle(fontSize: cardFontSize),
+                                );
+                              } else {
+                                return const CircularProgressIndicator();
+                              }
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text('left'),
-                          const Text('right'),
+                          const Text(''),
+                          const Text(''),
                         ],
                       ),
                     )

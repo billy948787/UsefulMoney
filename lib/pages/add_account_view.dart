@@ -12,9 +12,9 @@ import 'package:usefulmoney/domain/services/data/bloc/data_event.dart';
 import 'package:usefulmoney/domain/services/data/bloc/data_state.dart';
 import 'package:usefulmoney/domain/services/data/type/database_book.dart';
 import 'package:usefulmoney/utils/enums/template_actions.dart';
-import 'package:usefulmoney/widgets/dialogs/template_action_dialog.dart';
+import 'package:usefulmoney/utils/dialogs/template_action_dialog.dart';
 import 'package:usefulmoney/widgets/numpad.dart';
-import 'package:usefulmoney/widgets/dialogs/error_dialog.dart';
+import 'package:usefulmoney/utils/dialogs/error_dialog.dart';
 import 'dart:developer' as devtool show log;
 
 class AddAccountView extends StatefulWidget {
