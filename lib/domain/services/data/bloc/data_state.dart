@@ -97,3 +97,13 @@ class DataStateChooseTemplateAction extends DataState {
   @override
   List<Object?> get props => [hasChoosed, id];
 }
+
+class DataStateResetDatabase extends DataState {
+  final bool needReset;
+
+  const DataStateResetDatabase(
+      {required this.needReset, required super.exception});
+
+  @override
+  List<Object?> get props => [needReset];
+}

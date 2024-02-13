@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:usefulmoney/domain/services/data/bloc/data_bloc.dart';
 import 'package:usefulmoney/domain/services/data/bloc/data_state.dart';
 import 'package:usefulmoney/pages/setting_view.dart';
-import 'package:usefulmoney/widgets/dialogs/error_dialog.dart';
+import 'package:usefulmoney/utils/dialogs/error_dialog.dart';
 import 'package:usefulmoney/pages/book_view.dart';
 
 class MainPageView extends StatefulWidget {

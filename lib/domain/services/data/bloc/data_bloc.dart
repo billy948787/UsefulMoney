@@ -147,7 +147,22 @@ class DataBloc extends Bloc<DataEvent, DataState> {
 
     on<DataEventResetDatabase>(
       (event, emit) async {
-        await accountService.resetDatabase(email: email);
+        final wantReset = event.wantReset;
+        if (wantReset == null) {
+          emit(const DataStateResetDatabase(needReset: true, exception: null));
+          return;
+        }
+        if (wantReset) {
+          try {
+            await accountService.resetDatabase(email: email);
+            emit(const DataStateResetDatabase(
+                needReset: false, exception: null));
+          } on Exception catch (e) {
+            emit(DataStateResetDatabase(needReset: false, exception: e));
+          }
+        } else {
+          emit(const DataStateResetDatabase(needReset: false, exception: null));
+        }
       },
     );
     //刪除一整列表的帳
