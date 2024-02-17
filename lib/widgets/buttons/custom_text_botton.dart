@@ -40,30 +40,7 @@ class CustomTextButton extends StatelessWidget {
           child: Text(content, style: const TextStyle(fontSize: fontSize)),
         );
       } else {
-        return ButtonTheme(
-          height: 20,
-          minWidth: 100,
-          child: OutlinedButton(
-            onPressed: () {
-              onPress();
-            },
-            onLongPress: () => onHold(),
-            style: const ButtonStyle(
-              shape: MaterialStatePropertyAll(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(15)),
-                ),
-              ),
-            ),
-            child: Text(content, style: const TextStyle(fontSize: fontSize)),
-          ),
-        );
-      }
-    } else {
-      return ButtonTheme(
-        height: 50,
-        minWidth: 20,
-        child: OutlinedButton(
+        return OutlinedButton(
           onPressed: () {
             onPress();
           },
@@ -76,7 +53,22 @@ class CustomTextButton extends StatelessWidget {
             ),
           ),
           child: Text(content, style: const TextStyle(fontSize: fontSize)),
+        );
+      }
+    } else {
+      return OutlinedButton(
+        onPressed: () {
+          onPress();
+        },
+        onLongPress: () => onHold(),
+        style: const ButtonStyle(
+          shape: MaterialStatePropertyAll(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(15)),
+            ),
+          ),
         ),
+        child: Text(content, style: const TextStyle(fontSize: fontSize)),
       );
     }
   }
