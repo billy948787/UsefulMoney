@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 import 'package:path_provider/path_provider.dart';
-import 'dart:developer' as devtool show log;
 
 class EmailService {
   final smtpServer = SmtpServer(

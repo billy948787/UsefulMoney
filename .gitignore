@@ -43,4 +43,4 @@ app.*.map.json
 /android/app/release
 
 #Privacy related
-/lib/domain/smtp/
+/lib/domain/services/smtp/
