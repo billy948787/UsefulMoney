@@ -150,7 +150,8 @@ class _BookViewState extends State<BookView> {
                                       const TextStyle(fontSize: cardFontSize),
                                 );
                               } else {
-                                return const CircularProgressIndicator();
+                                return const CircularProgressIndicator
+                                    .adaptive();
                               }
                             },
                           ),
@@ -212,7 +213,7 @@ class _BookViewState extends State<BookView> {
                           snapshot.data!.length, (index) => false),
                     );
                   } else {
-                    return const CircularProgressIndicator();
+                    return const CircularProgressIndicator.adaptive();
                   }
                 },
               ),

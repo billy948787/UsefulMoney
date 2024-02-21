@@ -1,6 +1,7 @@
 import 'package:feedback/feedback.dart';
 import 'package:flutter/material.dart';
-import 'package:usefulmoney/domain/smtp/email_service.dart';
+import 'package:usefulmoney/domain/services/smtp/email_service.dart';
+import 'package:usefulmoney/utils/overlays/loading_screen/loading_overlay.dart';
 import 'package:usefulmoney/widgets/buttons/custom_botton.dart';
 
 class SendBugButton extends StatelessWidget {
@@ -13,11 +14,14 @@ class SendBugButton extends StatelessWidget {
         BetterFeedback.of(context).show(
           (UserFeedback feedback) async {
             final emailService = EmailService();
+            final loadingOverLay = LoadingOverlay();
+            loadingOverLay.show(context: context, text: '傳送中..');
 
             await emailService.sendMessage(
                 subject: 'UsefulMoneyBug!!',
                 text: feedback.text,
                 imageByte: feedback.screenshot);
+            loadingOverLay.close();
           },
         );
       },
