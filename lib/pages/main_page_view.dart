@@ -31,8 +31,8 @@ class _MainPageViewState extends State<MainPageView> {
       child: Scaffold(
         bottomNavigationBar: NavigationBar(
             destinations: const [
-              NavigationDestination(icon: Icon(Icons.home), label: ''),
-              NavigationDestination(icon: Icon(Icons.settings), label: ''),
+              NavigationDestination(icon: Icon(Icons.home), label: '首頁'),
+              NavigationDestination(icon: Icon(Icons.settings), label: '設定'),
             ],
             onDestinationSelected: (value) {
               setState(() {
